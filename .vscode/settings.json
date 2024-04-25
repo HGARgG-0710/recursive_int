@@ -19,6 +19,10 @@
 		"stdlib.h": "c",
 		"stdbool.h": "c",
 		"recursive_int.h": "c",
-		"partalloc.h": "c"
+		"partalloc.h": "c",
+		"paralloc.h": "c",
+		"optimized.h": "c",
+		"recursive_int_struct.h": "c",
+		"base.h": "c"
 	}
 }

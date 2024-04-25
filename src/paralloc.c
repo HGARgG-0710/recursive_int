@@ -1,4 +1,4 @@
-#include "./partalloc.h"
+#include "../include/paralloc.h"
 
 paralloc_result *paralloc(recursive_int *ri){
 

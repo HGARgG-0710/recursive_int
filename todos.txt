@@ -1,15 +1,23 @@
 1. Create an infinite-stack implementation...; 
 2. Documentation [be thorough...];
 3. Add more operations;
+	3.1. Modulo; 
+	3.2. Whole division;
 4. Add function for printing out the numbers; 
 	? Use the same recursive types to define strings [as a recursive 'char *']? 
 5. Do a mighty correctness check (in regard to allocations);
 6. Re-implement: 
 
-	In such a fashion, so as not to have to call the 'optimize' all the time; 
-	This causes a great performance bottleneck [particularly in 'greater' - in some cases, it can cause a 2 times speed decrease]; 
+	1. OPTIMIZED!
+		In such a fashion, so as not to have to call the 'optimize' all the time; 
+		This causes a great performance bottleneck [particularly in 'greater' - in some cases, it can cause a 2 times speed decrease]; 
 
-	Possibly, add more methods that are designed speicifally for the optimized recursive_ints?
+		Possibly, add more methods that are designed speicifally for the optimized recursive_ints?
+	2. CALLSTACK! 
+		Fix constant usage of recursion; 
+		Instead, replace with 'while' loops; 
 7. Write a disclaimer that this is a work in progress, when making public; 
 
 	Make distinction between the 'optimized' and 'unoptimized' pieces of API clearer; 
+
+8. Write tests; 
