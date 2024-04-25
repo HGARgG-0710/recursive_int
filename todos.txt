@@ -1,12 +1,11 @@
-1. Create an infinite-stack implementation...; 
-2. Documentation [be thorough...];
-3. Add more operations;
-	3.1. Modulo; 
-	3.2. Whole division;
-4. Add function for printing out the numbers; 
+1. Documentation [be thorough...];
+2. Add more operations;
+	2.1. Modulo; 
+	2.2. Whole division;
+3. Add function for printing out the numbers; 
 	? Use the same recursive types to define strings [as a recursive 'char *']? 
-5. Do a mighty correctness check (in regard to allocations);
-6. Re-implement: 
+4. Do a mighty correctness check (in regard to allocations);
+5. Re-implement: 
 
 	1. OPTIMIZED!
 		In such a fashion, so as not to have to call the 'optimize' all the time; 
@@ -15,9 +14,10 @@
 		Possibly, add more methods that are designed speicifally for the optimized recursive_ints?
 	2. CALLSTACK! 
 		Fix constant usage of recursion; 
-		Instead, replace with 'while' loops; 
-7. Write a disclaimer that this is a work in progress, when making public; 
+		Instead, replace with 'while' loops + pointers; 
+6. Write a disclaimer that this is a work in progress, when making public; 
 
 	Make distinction between the 'optimized' and 'unoptimized' pieces of API clearer; 
 
-8. Write tests; 
+7. Write tests; 
+8. ESSENTIAL: check the names - C has a funnily small limitation on them distinction-wise...; 

@@ -1,4 +1,4 @@
-#include "../include/recursive_int/recursive_int.h"
+#include "../include/recursive_int.h"
 
 recursive_int *recursive_int_add(recursive_int *dest, recursive_int *summand)
 {
@@ -13,7 +13,6 @@ recursive_int *recursive_int_add_i(recursive_int *dest, long long summand)
 {
 	recursive_int *to_recursive = recursive_int_from_ll(summand),
 				  *added = recursive_int_add(dest, to_recursive);
-	free_recursive_int(to_recursive);
 	return added;
 }
 
@@ -67,4 +66,12 @@ recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 	// ! DO THIS MORE OFTEN THROUGHOUT THE CODE!!! [in some places, one fears, lack of this causes freed objects to go missing instead of getting replaced with new ones...];
 	*dest = *recursive_zero();
 	return dest;
+}
+
+recursive_int *recursive_int_depth(recursive_int *ri)
+{
+	recursive_int *depth = recursive_int_from_ll(1);
+	if (ri->ri)
+		return recursive_int_sum(depth, recursive_int_depth(ri->ri));
+	return depth;
 }

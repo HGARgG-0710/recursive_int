@@ -1,4 +1,5 @@
-#include "../include/recursive_int/base.h"
+#include "../include/base.h"
+#include "../include/optimized.h"
 
 recursive_int *alloc_recursive_int(long long value, recursive_int *subri)
 {
@@ -115,4 +116,23 @@ recursive_int *last_not_full(recursive_int *ri)
 			ri = ri_p;
 	}
 	return ri;
+}
+
+recursive_int *recursive_int_last(recursive_int *ri)
+{
+	if (!ri->ri)
+		return ri;
+	return recursive_int_last(ri->ri);
+}
+recursive_int *recursive_int_set_last(recursive_int *ri, recursive_int *newlast)
+{
+	if (!ri->ri)
+		return ri;
+	if (!ri->ri->ri)
+	{
+		recursive_int *discarded = ri->ri;
+		ri->ri = newlast;
+		return discarded;
+	}
+	return recursive_int_last(ri->ri);
 }

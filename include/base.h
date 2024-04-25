@@ -30,4 +30,7 @@ recursive_int *get_positive(recursive_int *);
 recursive_int *first_not_full(recursive_int *);
 recursive_int *last_not_full(recursive_int *); 
 
+recursive_int * recursive_int_last(recursive_int *); 
+recursive_int * recursive_int_set_last(recursive_int *, recursive_int *); 
+
 #endif
