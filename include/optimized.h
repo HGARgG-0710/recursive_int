@@ -14,7 +14,7 @@ recursive_int *recursive_int_minize_negative(recursive_int *);
 
 bool recursive_int_equal_optimized(recursive_int *, recursive_int *);
 bool optimized_is_zero(recursive_int *);
-// TODO: have a non-optimized version...; 
 recursive_int *recursive_int_optimized_revert(recursive_int *);
+bool recursive_int_llfit(recursive_int *);
 
 #endif

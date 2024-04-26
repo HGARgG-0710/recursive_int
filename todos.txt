@@ -5,19 +5,9 @@
 3. Add function for printing out the numbers; 
 	? Use the same recursive types to define strings [as a recursive 'char *']? 
 4. Do a mighty correctness check (in regard to allocations);
-5. Re-implement: 
-
-	1. OPTIMIZED!
-		In such a fashion, so as not to have to call the 'optimize' all the time; 
-		This causes a great performance bottleneck [particularly in 'greater' - in some cases, it can cause a 2 times speed decrease]; 
-
-		Possibly, add more methods that are designed speicifally for the optimized recursive_ints?
-	2. CALLSTACK! 
-		Fix constant usage of recursion; 
-		Instead, replace with 'while' loops + pointers; 
-6. Write a disclaimer that this is a work in progress, when making public; 
+5. Write a disclaimer that this is a work in progress, when making public; 
 
 	Make distinction between the 'optimized' and 'unoptimized' pieces of API clearer; 
 
-7. Write tests; 
-8. ESSENTIAL: check the names - C has a funnily small limitation on them distinction-wise...; 
+6. Write tests; 
+7. ESSENTIAL: check the names - C has a funnily small limitation on them distinction-wise...; 

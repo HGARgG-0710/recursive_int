@@ -2,18 +2,16 @@
 
 recursive_int *recursive_int_add(recursive_int *dest, recursive_int *summand)
 {
-	if (!dest->ri)
-		dest->ri = summand;
-	else
-		recursive_int_add(dest->ri, summand);
+	recursive_int *subdest = dest;
+	while (subdest->ri)
+		subdest = subdest->ri;
+	subdest->ri = summand;
 	return dest;
 };
 
 recursive_int *recursive_int_add_i(recursive_int *dest, long long summand)
 {
-	recursive_int *to_recursive = recursive_int_from_ll(summand),
-				  *added = recursive_int_add(dest, to_recursive);
-	return added;
+	return recursive_int_add(dest, recursive_int_from_ll(summand));
 }
 
 bool recursive_int_sign(recursive_int *ri)
@@ -26,8 +24,10 @@ bool recursive_int_sign(recursive_int *ri)
 
 bool recursive_int_greater(recursive_int *a, recursive_int *b)
 {
-	recursive_int *acopy = recursive_int_diff(recursive_int_copy(a), recursive_int_copy(b));
+	recursive_int *bc = recursive_int_copy(b);
+	recursive_int *acopy = recursive_int_diff(recursive_int_copy(a), bc);
 	const bool is_greater = acopy->value >= 0;
+	free_recursive_int(bc);
 	free_recursive_int(acopy);
 	return is_greater;
 }
@@ -44,34 +44,23 @@ bool recursive_int_equal(recursive_int *a, recursive_int *b)
 
 recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 {
-	if (!recursive_int_equal(origin, 0))
-	{
-		// TODO: fix the 'copy'; Optimizing every time was A BAD idea; it should ONLY be done when needed for performance/optimization reasons...; ALSO - one should [as a rule] refrain from memory-optimization as it is costly;
-		// ! OPTIMIZE WHERE IT'S STRATEGIC! Without optimization, certain algortihms cannot be implemented desireably [from interface standpoint]; So, do it only when absolutely necessary;
-		// ? The code requires a thorough run-through to determine those places pin-pointedly...;
-		recursive_int *origcopy = recursive_int_copy(origin);
-		const bool sign = origcopy->value >= 0;
-		recursive_int *destcopy = recursive_int_copy(dest);
-		if (!sign)
-			recursive_int_addinv(destcopy);
-		recursive_int *(*change)(recursive_int *) = sign ? recursive_int_dec : recursive_int_inc;
-		while (!recursive_int_equal(origcopy, 0))
-		{
-			change(origcopy);
-			recursive_int_add(dest, destcopy);
-		}
-		return dest;
-	}
-	free_recursive_int(dest);
-	// ! DO THIS MORE OFTEN THROUGHOUT THE CODE!!! [in some places, one fears, lack of this causes freed objects to go missing instead of getting replaced with new ones...];
-	*dest = *recursive_zero();
-	return dest;
-}
+	recursive_int *opdest = recursive_int_optimize(dest),
+				  *oporig = recursive_int_optimize(origin);
 
-recursive_int *recursive_int_depth(recursive_int *ri)
-{
-	recursive_int *depth = recursive_int_from_ll(1);
-	if (ri->ri)
-		return recursive_int_sum(depth, recursive_int_depth(ri->ri));
-	return depth;
+	if (oporig->ri < 0)
+	{
+		opdest = recursive_int_addinv(opdest);
+		oporig = recursive_int_addinv(oporig);
+	}
+
+	while (!optimized_is_zero(oporig))
+	{
+		oporig->value -= 1;
+		while (!oporig->value && oporig->ri)
+			oporig = oporig->ri;
+		recursive_int *destcopy = recursive_int_copy(opdest);
+		dest = recursive_int_sum(dest, destcopy);
+	}
+
+	return opdest;
 }

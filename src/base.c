@@ -1,5 +1,4 @@
 #include "../include/base.h"
-#include "../include/optimized.h"
 
 recursive_int *alloc_recursive_int(long long value, recursive_int *subri)
 {
@@ -12,21 +11,28 @@ recursive_int *alloc_recursive_int(long long value, recursive_int *subri)
 recursive_int *free_recursive_int(recursive_int *ri)
 {
 	if (!ri)
-		return true;
-	if (ri->ri)
+		return false;
+	while (ri->ri)
 	{
-		free_recursive_int(ri->ri);
-		ri->ri = false;
+		recursive_int *r = ri->ri;
+		free(ri);
+		ri = r;
 	}
 	free(ri);
 	return false;
 }
 
-// * For optimization, one can do 'a = alloc_recursive_int(); ac = recursive_int_copy(a); a = free_recursive_int(a); a = &ac; ac = false;' to ensure that a given recursive_int is optimized;
-// ! ADD THIS AS A MACRO! [add 'macros.c' file with them...];
 recursive_int *recursive_int_copy(recursive_int *ri)
 {
-	return alloc_recursive_int(ri->value, ri->ri ? recursive_int_copy(ri->ri) : 0);
+	recursive_int *res = alloc_recursive_int(ri->value, 0);
+	recursive_int *tempres = res;
+	while (ri->ri)
+	{
+		ri = ri->ri;
+		tempres->ri = alloc_recursive_int(ri->value, 0);
+		tempres = tempres->ri;
+	}
+	return res;
 };
 
 recursive_int *recursive_int_from_ll(long long value)
@@ -49,46 +55,67 @@ recursive_int *recursive_int_dec(recursive_int *ri)
 	return ri;
 }
 
-bool recursive_int_llfit(recursive_int *ri)
+recursive_int *recursive_int_abs(recursive_int *ri)
 {
-	if (!ri->ri)
-		return true;
-	if (!(ri->value >= 0 ? LLONG_MAX - ri->value >= ri->ri->value : LLONG_MIN - ri->value <= ri->ri->value))
-		return false;
-	recursive_int *intersum = alloc_recursive_int(ri->value + ri->ri->value, ri->ri->ri);
-	const bool fits = recursive_int_llfit(intersum);
-	free_recursive_int(intersum);
-	return fits;
+	recursive_int *tempri = ri;
+	tempri->value = llabs(tempri->value);
+	while (ri->ri)
+	{
+		tempri = tempri->ri;
+		tempri->value = llabs(tempri->value);
+	}
+	return ri;
 }
 
-void recursive_int_abs(recursive_int *ri)
+recursive_int *recursive_int_addinv(recursive_int *ri)
 {
-	ri->value = llabs(ri->value);
-	if (ri->ri)
-		recursive_int_abs(ri->ri);
+	recursive_int *tempri = ri;
+	tempri->value = -tempri->value;
+	while (ri->ri)
+	{
+		tempri = tempri->ri;
+		tempri->value = -tempri->value;
+	}
+	return ri;
 }
 
-void recursive_int_addinv(recursive_int *ri)
-{
-	ri->value = -ri->value;
-	if (ri->ri)
-		recursive_int_addinv(ri);
-}
-
-// ! Generalize these two ['get_positive' and 'get_negative']with a macro...
 recursive_int *get_positive(recursive_int *ri)
 {
-	if (ri->value < 0)
-		return get_positive(ri->value);
-	recursive_int *positive = alloc_recursive_int(ri->value, get_positive(ri->ri));
+	recursive_int *interri = ri;
+	recursive_int *positive = alloc_recursive_int(0, 0);
+	recursive_int *temppos = positive;
+	while (interri->ri)
+	{
+		while (interri->value < 0)
+			interri = interri->ri;
+		temppos->value = interri->value;
+		if (interri->ri)
+		{
+			temppos->ri = recursive_int_from_ll(0);
+			temppos = temppos->ri;
+			interri = interri->ri;
+		}
+	}
 	return positive;
 }
 
 recursive_int *get_negative(recursive_int *ri)
 {
-	if (ri->value >= 0)
-		return get_negative(ri->value);
-	recursive_int *negative = alloc_recursive_int(ri->value, get_negative(ri->ri));
+	recursive_int *interri = ri;
+	recursive_int *negative = alloc_recursive_int(0, 0);
+	recursive_int *tempneg = negative;
+	while (interri->ri)
+	{
+		while (interri->value > 0)
+			interri = interri->ri;
+		tempneg->value = interri->value;
+		if (interri->ri)
+		{
+			tempneg->ri = recursive_int_from_ll(0);
+			tempneg = tempneg->ri;
+			interri = interri->ri;
+		}
+	}
 	return negative;
 }
 
@@ -120,19 +147,55 @@ recursive_int *last_not_full(recursive_int *ri)
 
 recursive_int *recursive_int_last(recursive_int *ri)
 {
-	if (!ri->ri)
-		return ri;
-	return recursive_int_last(ri->ri);
+	while (ri->ri)
+		ri = ri->ri;
+	return ri;
 }
 recursive_int *recursive_int_set_last(recursive_int *ri, recursive_int *newlast)
 {
 	if (!ri->ri)
 		return ri;
-	if (!ri->ri->ri)
+	while (ri->ri->ri)
+		ri = ri->ri;
+	recursive_int *discarded = ri->ri;
+	ri->ri = newlast;
+	return discarded;
+}
+
+recursive_int *recursive_int_depth(recursive_int *ri)
+{
+	recursive_int *depth = recursive_int_from_ll(1);
+	while (ri->ri)
 	{
-		recursive_int *discarded = ri->ri;
-		ri->ri = newlast;
-		return discarded;
+		recursive_int_inc(depth);
+		ri = ri->ri;
 	}
-	return recursive_int_last(ri->ri);
+	return depth;
+}
+
+recursive_int *recursive_int_revert(recursive_int *ri)
+{
+	recursive_int *copy = recursive_int_copy(ri);
+	recursive_int *last = recursive_int_last(copy);
+	recursive_int *curr = copy;
+	recursive_int *currlast = false;
+	recursive_int *next;
+
+	recursive_int *r = ri;
+
+	while (r->ri && curr != last)
+	{
+		next = copy->ri;
+		last->ri = curr;
+		curr->ri = currlast;
+		currlast = curr;
+		curr = next;
+		recursive_int *_r = r->ri;
+		free(r);
+		r = _r;
+	}
+
+	*ri = *copy;
+
+	return ri;
 }
