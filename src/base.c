@@ -79,6 +79,7 @@ recursive_int *recursive_int_addinv(recursive_int *ri)
 	return ri;
 }
 
+// TODO: conduct refactoring! (use macros for these two...)
 recursive_int *get_positive(recursive_int *ri)
 {
 	recursive_int *interri = ri;

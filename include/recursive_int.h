@@ -14,4 +14,7 @@ bool recursive_int_equal(recursive_int *, recursive_int *);
 bool recursive_int_sign(recursive_int *);
 recursive_int *recursive_int_depth(recursive_int *);
 
+bool is_zero(recursive_int * ri); 
+bool recursive_int_llfit(recursive_int *);
+
 #endif

@@ -23,6 +23,7 @@
 		"paralloc.h": "c",
 		"optimized.h": "c",
 		"recursive_int_struct.h": "c",
-		"base.h": "c"
+		"base.h": "c",
+		"print.h": "c"
 	}
 }

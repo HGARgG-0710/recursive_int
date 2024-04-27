@@ -64,3 +64,19 @@ recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 
 	return opdest;
 }
+
+bool is_zero(recursive_int *ri)
+{
+	recursive_int *opri = recursive_int_optimize(ri);
+	const bool isZero = optimized_is_zero(opri);
+	free_recursive_int(opri);
+	return isZero;
+}
+
+bool recursive_int_llfit(recursive_int *ri)
+{
+	recursive_int *optimized = recursive_int_optimize(ri);
+	const bool fits = !optimized->ri;
+	free_recursive_int(optimized);
+	return fits;
+}

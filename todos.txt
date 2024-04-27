@@ -1,13 +1,6 @@
-1. Documentation [be thorough...];
-2. Add more operations;
+1. Add more operations;
 	2.1. Modulo; 
 	2.2. Whole division;
-3. Add function for printing out the numbers; 
-	? Use the same recursive types to define strings [as a recursive 'char *']? 
-4. Do a mighty correctness check (in regard to allocations);
-5. Write a disclaimer that this is a work in progress, when making public; 
-
-	Make distinction between the 'optimized' and 'unoptimized' pieces of API clearer; 
-
-6. Write tests; 
-7. ESSENTIAL: check the names - C has a funnily small limitation on them distinction-wise...; 
+2. Do a mighty correctness check (in regard to allocations);
+3. Write the tests (choose examples - think how to organize them to do it quickly... don't want to waste another week on it); 
+4. ESSENTIAL: check the names - C has a funnily small length limitation on them distinction-wise...; 

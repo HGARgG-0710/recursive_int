@@ -1,4 +1,3 @@
-#include "../include/base.h"
 #include "../include/optimized.h"
 
 // * conducts memory-wise optimization of a rec-int [by default, they're unoptimized after operations, copying can be done for optimization];
@@ -93,6 +92,7 @@ recursive_int *de_zero(recursive_int *ri)
 	return topri;
 }
 
+// TODO: refactor those two using a macro...;
 recursive_int *recursive_int_minize_positive(recursive_int *ri)
 {
 	if (!ri->ri)
@@ -155,12 +155,4 @@ recursive_int *recursive_int_optimized_revert(recursive_int *ri)
 	recursive_int *newfirst = ri->ri;
 	ri->ri = false;
 	return newfirst;
-}
-
-bool recursive_int_llfit(recursive_int *ri)
-{
-	recursive_int *optimized = recursive_int_optimize(ri);
-	const bool fits = !optimized->ri;
-	free_recursive_int(optimized);
-	return fits;
 }
