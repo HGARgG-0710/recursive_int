@@ -21,7 +21,7 @@ wchar_t *base_representation(long long number, unsigned short base)
 	{
 		const wchar_t *absres = base_representation(llabs(number), base);
 		wchar_t *final = (wchar_t *)malloc(sizeof(wchar_t) * (1 + sizeof(absres) / sizeof(wchar_t)));
-		final[0] = "-";
+		final[0] = (wchar_t) "-";
 		wcscat(final, absres);
 		free(absres);
 		return final;
@@ -72,6 +72,8 @@ wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base)
 	return dest;
 }
 
+// todo: this algorithm does not take in account the fact that this thing is reversed!
+// ! FIX THIS! [look for this bug in the other methods as well];
 wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 {
 	wchar_t *cadd = (wchar_t *)malloc(sizeof(wchar_t));
@@ -97,12 +99,12 @@ wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
 		if (aneg)
 		{
 			a = (wchar_t *)malloc(sizeof(a) - 1);
-			strncpy(a, ca + 1, wcslen(ca) - 1);
+			wcsncpy(a, ca + 1, wcslen(ca) - 1);
 		}
 		else
 		{
 			b = (wchar_t *)malloc(sizeof(b) - 1);
-			strncpy(b, cb + 1, wcslen(cb) - 1);
+			wcsncpy(b, cb + 1, wcslen(cb) - 1);
 		}
 		wchar_t *subtracted = symbolic_subtraction(aneg ? b : a, aneg ? a : b, base);
 		free(aneg ? a : b);
@@ -112,7 +114,7 @@ wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
 	const size_t length = min(wcslen(b), wcslen(a));
 	const wchar_t *curr = length == wcslen(a) ? a : b;
 	const wchar_t *dest = curr == a ? b : a;
-	for (size_t i = 0; i < length; ++i)
+	for (size_t i = 0; i < length - aneg; ++i)
 		symbolic_bit_add(dest, curr[i], i, base);
 	return dest;
 }
@@ -129,25 +131,22 @@ wchar_t *symbolic_plus(wchar_t *a, wchar_t *b, unsigned short base)
 	return plused;
 }
 
-// TODO: REFACTOR THOSE USING A MACRO...;
-void recursive_int_print(recursive_int *ri, unsigned short base)
+wchar_t *recursive_int_print(recursive_int *ri, unsigned short base)
 {
-	setlocale(LC_ALL, "C.UTF-8");
 	wchar_t *final = base_representation(ri->value, base);
 
 	while (ri->ri)
 	{
 		ri = ri->ri;
 		wchar_t *next = base_representation(ri->value, base);
-		final = symbolic_plus(final, next, base);
+		final = symbolic_addition(final, next, base);
+		free(next);
 	}
 
-	printf("%ls", final); 
-	free(final);
+	return final;
 }
-void recursive_int_print_sum(recursive_int *ri, unsigned short base)
+wchar_t *recursive_int_print_sum(recursive_int *ri, unsigned short base)
 {
-	setlocale(LC_ALL, "C.UTF-8");
 	wchar_t *final = base_representation(ri->value, base);
 
 	while (ri->ri)
@@ -159,6 +158,6 @@ void recursive_int_print_sum(recursive_int *ri, unsigned short base)
 		free(copy);
 		free(next);
 	}
-	printf("%ls", final); 
-	free(final);
+
+	return final;
 }

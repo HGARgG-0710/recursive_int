@@ -1,6 +1,3 @@
-<!-- TODO: write documentation for methods! [and test them based on it...] -->
-<!-- TODO: create a file for testing of each one separate method - DO IT FROM GROUNDS UP, draw a dependency graph and test from top-to-bottom...; -->
-
 <!-- TODO: be more specific - what are the return values AND whether they are optimized or not. -->
 
 # recursive_int
@@ -24,6 +21,7 @@ needed to acommodate some of them.
 1. `base.h` - contains basic operations on the recursive_int structure (also the structure itself);
 2. `optimized.h` - most of operations in `base.h` are on "unoptimized" integers (those that can contain sign alterations and zeros); Contains operations related to optimizing them (saves memory, takes additional time to do, but make writing algorithms a lot easier).
 3. `recursive_int.h` - methods that depend upon `optimized.h`, but don't relate to optimization itself.
+4. `print.h` - methods for printing the recursive integers, either as a sum or as a precise value in a given base;
 
 #### `base.h`
 
@@ -190,7 +188,7 @@ While preserving the final value of the `recursive_int`.
 The optimized versions are far more memory efficient, are easier to work with and cause solutions to certain algorithms to become trivial.
 The only downside to using them is the necessity for explicit conversion before doing doing anything futher (which can be more costly time-wise).
 
-On the other hand, the unoptimized operations are simpler to implement, but are more resource-costly (unneeded allocated space). 
+On the other hand, the unoptimized operations are simpler to implement, but are more resource-costly (unneeded allocated space).
 
 &nbsp;
 
@@ -198,7 +196,7 @@ On the other hand, the unoptimized operations are simpler to implement, but are 
 recursive_int *recursive_int_diff(recursive_int *, recursive_int *)
 ```
 
-Difference between two `recursive_int`s without sign alteration (preserves optimized-ness). 
+Difference between two `recursive_int`s without sign alteration (preserves optimized-ness).
 
 &nbsp;
 
@@ -274,7 +272,7 @@ Sum between two `recursive_int`s - does not allocate a new one (only links the l
 recursive_int *recursive_int_add_i(recursive_int *, long long value)
 ```
 
-Same as `recursive_int_add`, but first allocates a new `recursive_int` from `value`. 
+Same as `recursive_int_add`, but first allocates a new `recursive_int` from `value`.
 
 &nbsp;
 
@@ -282,7 +280,7 @@ Same as `recursive_int_add`, but first allocates a new `recursive_int` from `val
 recursive_int *recursive_int_mult(recursive_int *, recursive_int *)
 ```
 
-Returns the product of two `recursive_int`s (works with unoptimized ones). 
+Returns the product of two `recursive_int`s (works with unoptimized ones).
 
 &nbsp;
 
@@ -290,7 +288,7 @@ Returns the product of two `recursive_int`s (works with unoptimized ones).
 bool recursive_int_greater(recursive_int *, recursive_int *)
 ```
 
-Returns which of the two `recursive_int`s is greater (works with unoptimized ones). 
+Returns which of the two `recursive_int`s is greater (works with unoptimized ones).
 
 &nbsp;
 
@@ -298,7 +296,7 @@ Returns which of the two `recursive_int`s is greater (works with unoptimized one
 bool recursive_int_equal(recursive_int *, recursive_int *)
 ```
 
-Returns whether two `recursive_int`s are equal (works with unoptimizd ones). 
+Returns whether two `recursive_int`s are equal (works with unoptimizd ones).
 
 &nbsp;
 
@@ -306,7 +304,7 @@ Returns whether two `recursive_int`s are equal (works with unoptimizd ones).
 bool recursive_int_sign(recursive_int * ri)
 ```
 
-Returns `1` if `ri` is positive or `0` and `0` otherwise. 
+Returns `1` if `ri` is positive or `0` and `0` otherwise.
 
 &nbsp;
 
@@ -314,7 +312,7 @@ Returns `1` if `ri` is positive or `0` and `0` otherwise.
 bool is_zero(recursive_int *)
 ```
 
-Returns whether the given `recursive_int` is zero (works with un-optimized values as well). 
+Returns whether the given `recursive_int` is zero (works with un-optimized values as well).
 
 &nbsp;
 
@@ -325,3 +323,68 @@ bool recursive_int_llfit(recursive_int *)
 Returns the boolean indicating whether the given `recursive_int` fits into a single `long long`.
 
 &nbsp;
+
+#### `print.h`
+
+Methods related to printing of the values of `recursive_int` (mainly for debug purposes).
+
+##### Macros
+
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+```
+
+##### Methods
+
+```c
+wchar_t *string_reverse(wchar_t *)
+```
+
+&nbsp;
+
+```c
+wchar_t *base_representation(long long number, unsigned short base)
+```
+
+&nbsp;
+
+```c
+wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
+```
+
+&nbsp;
+
+```c
+wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
+```
+
+&nbsp;
+
+```c
+wchar_t *symbolic_addition(wchar_t *, wchar_t *, unsigned short base);
+```
+
+&nbsp;
+
+```c
+wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base);
+```
+
+&nbsp;
+
+```c
+wchar_t *symbolic_plus(wchar_t *, wchar_t *, unsigned short base);
+```
+
+&nbsp;
+
+```c
+wchar_t *recursive_int_print(recursive_int *, unsigned short base);
+```
+
+&nbsp;
+
+```c
+wchar_t *recursive_int_print_sum(recursive_int *, unsigned short base);
+```
