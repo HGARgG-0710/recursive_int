@@ -9,6 +9,8 @@ This is a small C library that wholy implements Integers via recursion.
 There is no inherent max possible size of the integers allocatable with it,
 only limitations are due to the user's RAM.
 
+NOTE: in the future, the library's orientation may change drastically (as a result of expansion).
+
 ## Documentation
 
 ### Definition

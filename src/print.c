@@ -22,17 +22,17 @@ wchar_t *base_representation(long long number, unsigned short base)
 		const wchar_t *absres = base_representation(llabs(number), base);
 		wchar_t *final = (wchar_t *)malloc(sizeof(wchar_t) * (1 + sizeof(absres) / sizeof(wchar_t)));
 		final[0] = "-";
-		strcat(final, absres);
+		wcscat(final, absres);
 		free(absres);
 		return final;
 	}
 	const size_t pos = (size_t)(floor(log(number) / log(base)));
 	wchar_t *buffer = (wchar_t *)malloc(sizeof(wchar_t) * pos);
 
-	for (size_t i = 0; i < pos; i++)
+	for (size_t i = 0; i < pos; ++i)
 	{
 		const unsigned short remainder = number % (long long)base;
-		buffer[i] = 32 + remainder;
+		buffer[i] = 48 + remainder;
 		number -= remainder;
 		number /= base;
 	}
@@ -44,45 +44,121 @@ wchar_t *base_representation(long long number, unsigned short base)
 	return buffer;
 }
 
-wchar_t *symbolic_addition(wchar_t *a, wchar_t *b)
+wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 {
-	// TODO: implement;
+	wchar_t *cadd = (wchar_t *)malloc(sizeof(wchar_t));
+	wcscpy(cadd, add);
+	while (dest[pos] != 48 && *cadd > 48)
+	{
+		dest[pos]--;
+		*cadd--;
+	}
+	if (*cadd > 48)
+	{
+		symbolic_bit_add(dest, (base - 1) + 48, pos, base);
+		symbolic_bit_sub(dest, "1", pos + 1, base);
+		symbolic_bit_sub(dest, cadd, pos, base);
+	}
+	free(cadd);
+	return dest;
 }
 
-wchar_t *symbolic_plus(wchar_t *a, wchar_t *b, unsigned long coeff)
+wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base)
 {
-	// ! Concatenate one-by-one using either + or '-' (depending on the sign), AND by checking for repetitions (add integer-factors at the front);
+	const size_t length = wcslen(sub);
+	const wchar_t *dest = total;
+	for (size_t i = 0; i < length; ++i)
+		symbolic_bit_sub(dest, sub[i], i, base);
+	return dest;
+}
+
+wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
+{
+	wchar_t *cadd = (wchar_t *)malloc(sizeof(wchar_t));
+	wcscpy(cadd, add);
+	while (*cadd > 48 && dest[pos] < base - 48)
+	{
+		dest[pos]++;
+		*cadd--;
+	}
+	if (cadd > 48)
+		symbolic_bit_add(dest, (wchar_t) "1", pos + 1, base);
+	free(cadd);
+	return dest;
+}
+
+wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
+{
+	const bool aneg = a[0] == "-", bneg = b[0] == "-";
+	if (aneg != bneg)
+	{
+		wchar_t *ca = a, *cb = b;
+		// TODO: macro... refactor...;
+		if (aneg)
+		{
+			a = (wchar_t *)malloc(sizeof(a) - 1);
+			strncpy(a, ca + 1, wcslen(ca) - 1);
+		}
+		else
+		{
+			b = (wchar_t *)malloc(sizeof(b) - 1);
+			strncpy(b, cb + 1, wcslen(cb) - 1);
+		}
+		wchar_t *subtracted = symbolic_subtraction(aneg ? b : a, aneg ? a : b, base);
+		free(aneg ? a : b);
+		return subtracted;
+	}
+
+	const size_t length = min(wcslen(b), wcslen(a));
+	const wchar_t *curr = length == wcslen(a) ? a : b;
+	const wchar_t *dest = curr == a ? b : a;
+	for (size_t i = 0; i < length; ++i)
+		symbolic_bit_add(dest, curr[i], i, base);
+	return dest;
+}
+
+// TODO: later - generalize to the 'coeff' idea (represent the repeating sums as products) - this'll require a structure with wchar_t** pointer;
+wchar_t *symbolic_plus(wchar_t *a, wchar_t *b, unsigned short base)
+{
+	const bool positive = b[0] != "-";
+	wchar_t *plused = (wchar_t *)malloc(sizeof(a) + positive * sizeof(wchar_t) + sizeof(b));
+	wcscpy(plused, a);
+	if (positive)
+		wcscat(plused, "+");
+	wcscat(plused, b);
+	return plused;
 }
 
 // TODO: REFACTOR THOSE USING A MACRO...;
 void recursive_int_print(recursive_int *ri, unsigned short base)
 {
-	recursive_int *currri = ri;
-	wchar_t *final = base_representation(currri->value, base);
-	while (currri->ri)
+	setlocale(LC_ALL, "C.UTF-8");
+	wchar_t *final = base_representation(ri->value, base);
+
+	while (ri->ri)
 	{
-		currri = currri->ri;
-		wchar_t *next = base_representation(currri->value, base);
-		wchar_t *copy = final;
-		final = symbolic_addition(final, next);
-		free(copy);
+		ri = ri->ri;
+		wchar_t *next = base_representation(ri->value, base);
+		final = symbolic_plus(final, next, base);
 	}
-	// 	TODO: print out the value;
+
+	printf("%ls", final); 
+	free(final);
 }
 void recursive_int_print_sum(recursive_int *ri, unsigned short base)
 {
-	recursive_int *currri = ri;
-	wchar_t *final = base_representation(currri->value, base);
-	unsigned long coeff = 1;
+	setlocale(LC_ALL, "C.UTF-8");
+	wchar_t *final = base_representation(ri->value, base);
 
-	while (currri->ri)
+	while (ri->ri)
 	{
-		currri = currri->ri;
-		wchar_t *next = base_representation(currri->value, base);
-		coeff = (next == final) * (coeff) + 1;
+		ri = ri->ri;
+		wchar_t *next = base_representation(ri->value, base);
 		wchar_t *copy = final;
-		final = symbolic_plus(final, next, coeff);
+		final = symbolic_plus(final, next, base);
 		free(copy);
+		free(next);
 	}
-	// TODO: print out the value...; 
+	printf("%ls", final); 
+	free(final);
 }
