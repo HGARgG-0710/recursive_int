@@ -117,12 +117,12 @@ int main()
 	wchar_t *g1a = "231203";
 	wchar_t *g1b = "112";
 
-	wchar_t *o1g1 = symbolic_plus(g1a, g1b, 4);
+	wchar_t *o1g1 = symbolic_plus(g1a, g1b);
 
 	wchar_t g2a = "-abc204";
 	wchar_t g2b = "-20943";
 
-	wchar_t *o1g2 = symbolic_plus(g2a, g2b, 10);
+	wchar_t *o1g2 = symbolic_plus(g2a, g2b);
 
 	printf("Symbolic sum test 1 (in): %ls %ls\n", g1a, g1b);
 	printf("Symbolic sum test 1 (out, 1):%ls \n\n", o1g1);

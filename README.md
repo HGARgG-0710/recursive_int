@@ -1,4 +1,6 @@
 <!-- TODO: be more specific - what are the return values AND whether they are optimized or not. -->
+<!-- TODO: VITAL - write that the library (in general) assumes that the dynamic allocation is used; -->
+<!-- ! Fix that - make sure that static allocation + pointers equally viable; -->
 
 # recursive_int
 
@@ -14,7 +16,8 @@ NOTE: in the future, the library's orientation may change drastically (as a resu
 
 The "recursive integers" are basically linked lists, representing their sums.
 From this definition various properties sprout and the library contains the methods
-needed to acommodate some of them.
+needed to acommodate some of them, as well as mirroring various basic arithmetic interfaces
+on integers.
 
 ### Headers
 
@@ -216,20 +219,6 @@ Eliminates all the `0`s and other non-`LLONG_MAX`/non-`LLONG_MIN` values (up to 
 
 &nbsp;
 
-<!-- TODO: after refactoring - GET RID OF THESE TWO - they're poorly done... -->
-
-```c
-recursive_int *recursive_int_minize_positive(recursive_int *)
-```
-
-&nbsp;
-
-```c
-recursive_int *recursive_int_minize_negative(recursive_int *)
-```
-
-&nbsp;
-
 ```c
 bool recursive_int_equal_optimized(recursive_int *, recursive_int *)
 ```
@@ -341,11 +330,17 @@ Methods related to printing of the values of `recursive_int` (mainly for debug p
 wchar_t *string_reverse(wchar_t *)
 ```
 
+Allocates a new `wchar_t` array, the value of which is the reversal of the given one, and then returns pointer to it.
+
 &nbsp;
 
 ```c
 wchar_t *base_representation(long long number, unsigned short base)
 ```
+
+Allocates a new `wchar_t *`, pointing to the symbolic representation of `number` in `base`.
+
+NOTE: the UTF-16 values are used for construction of symbols for every given `base`.
 
 &nbsp;
 
@@ -353,11 +348,16 @@ wchar_t *base_representation(long long number, unsigned short base)
 wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 ```
 
+"Adds" symbolicaly the contents of `add` at position `pos` to `dest` (altering it) and subtracts the value from `add` (altering it as well)
+in base `base`. Returns `dest`.
+
 &nbsp;
 
 ```c
 wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 ```
+
+Same as `symbolic_bit_add`, but instead of addition does subtraction from `dest`.
 
 &nbsp;
 
@@ -365,17 +365,25 @@ wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned shor
 wchar_t *symbolic_addition(wchar_t *, wchar_t *, unsigned short base);
 ```
 
+Adds "symbolically" first and second argument (signs can differ) in base `base`,
+then returns the pointer to the result as a newly allocated `wchar_t*`.
+
 &nbsp;
 
 ```c
 wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base);
 ```
 
+Same as `symbolic_addition`, but for subtraction (also, does not work with negative values).
+
 &nbsp;
 
 ```c
-wchar_t *symbolic_plus(wchar_t *, wchar_t *, unsigned short base);
+wchar_t *symbolic_plus(wchar_t *, wchar_t *);
 ```
+
+Allocates and returns a new string which is the concatenation of the given two arguments with
+either `"+"` or `"-"` (if the second one is negative).
 
 &nbsp;
 
@@ -383,8 +391,13 @@ wchar_t *symbolic_plus(wchar_t *, wchar_t *, unsigned short base);
 wchar_t *recursive_int_print(recursive_int *, unsigned short base);
 ```
 
+Allocates a new `wchar_t*`, containing the representation of a given `recursive_int` in base `base` and returns it.
+
 &nbsp;
 
 ```c
 wchar_t *recursive_int_print_sum(recursive_int *, unsigned short base);
 ```
+
+Allocates a new `wchar_t*`, containing the representation of the given `recursive_int` as a sum of
+`long long` values represented as `wchar_t*` in base `base`.

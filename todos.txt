@@ -2,5 +2,5 @@
 	2.1. Modulo; 
 	2.2. Whole division;
 2. Do a mighty correctness check (in regard to allocations);
-3. Write the tests (choose examples - think how to organize them to do it quickly... don't want to waste another week on it); 
+3. Finish writing the tests (choose examples - think how to organize them to do it quickly... don't want to waste another week on it); 
 4. ESSENTIAL: check the names - C has a funnily small length limitation on them distinction-wise...; 

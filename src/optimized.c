@@ -1,5 +1,27 @@
 #include "../include/optimized.h"
 
+#define recursive_int_minimize_signed(LIMIT, SIGN)                        \
+	if (!ri->ri)                                                          \
+		return ri;                                                        \
+	recursive_int *topri = ri->value == LIMIT ? ri->ri : ri;              \
+	recursive_int *ricurr = topri->ri;                                    \
+	while (ricurr->ri)                                                    \
+	{                                                                     \
+		ricurr = topri->ri;                                               \
+		if (topri->value SIGN LIMIT - ricurr->value)                      \
+		{                                                                 \
+			topri->value += ricurr->value;                                \
+			topri->ri = ricurr->ri;                                       \
+			free(ricurr);                                                 \
+			continue;                                                     \
+		}                                                                 \
+		const long long diff = -((LIMIT - topri->value) - ricurr->value); \
+		topri->value = LIMIT;                                             \
+		ricurr->value -= diff;                                            \
+		topri = topri->ri;                                                \
+	}                                                                     \
+	return ri;
+
 // * conducts memory-wise optimization of a rec-int [by default, they're unoptimized after operations, copying can be done for optimization];
 recursive_int *recursive_int_optimize(recursive_int *ri)
 {
@@ -73,8 +95,10 @@ bool recursive_int_equal_optimized(recursive_int *a, recursive_int *b)
 recursive_int *recursive_int_minize(recursive_int *ri)
 {
 	if (ri->value >= 0)
-		return recursive_int_minize_positive(ri);
-	return recursive_int_minize_negative(ri);
+	{
+		recursive_int_minimize_signed(LLONG_MAX, <=)
+	}
+	recursive_int_minimize_signed(LLONG_MIN, >=)
 }
 
 recursive_int *de_zero(recursive_int *ri)
@@ -90,56 +114,6 @@ recursive_int *de_zero(recursive_int *ri)
 		r = topri->ri;
 	}
 	return topri;
-}
-
-// TODO: refactor those two using a macro...;
-recursive_int *recursive_int_minize_positive(recursive_int *ri)
-{
-	if (!ri->ri)
-		return ri;
-	recursive_int *topri = ri->value == LLONG_MAX ? ri->ri : ri;
-	recursive_int *ricurr = topri->ri;
-	while (ricurr->ri)
-	{
-		ricurr = topri->ri;
-		if (topri->value < LLONG_MAX - ricurr->value)
-		{
-			topri->value += ricurr->value;
-			topri->ri = ricurr->ri;
-			free(ricurr);
-			continue;
-		}
-		const long long diff = -((LLONG_MAX - topri->value) - ricurr->value);
-		topri->value = LLONG_MAX;
-		ricurr->value -= diff;
-		topri = topri->ri;
-	}
-
-	return ri;
-}
-recursive_int *recursive_int_minize_negative(recursive_int *ri)
-{
-	if (!ri->ri)
-		return ri;
-	recursive_int *topri = ri->value == LLONG_MIN ? ri->ri : ri;
-	recursive_int *ricurr = topri->ri;
-	while (ricurr->ri)
-	{
-		ricurr = topri->ri;
-		if (topri->value > LLONG_MIN - ricurr->value)
-		{
-			topri->value += ricurr->value;
-			topri->ri = ricurr->ri;
-			free(ricurr);
-			continue;
-		}
-		const long long diff = -((LLONG_MIN - topri->value) - ricurr->value);
-		topri->value = LLONG_MIN;
-		ricurr->value -= diff;
-		topri = topri->ri;
-	}
-
-	return ri;
 }
 
 bool optimized_is_zero(recursive_int *ri)

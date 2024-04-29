@@ -1,5 +1,26 @@
 #include "../include/base.h"
 
+#define get_signed(NAME, CHECK_OPERATOR)                   \
+	recursive_int *get_##NAME##(recursive_int * ri)        \
+	{                                                      \
+		recursive_int *interri = ri;                       \
+		recursive_int *sought = alloc_recursive_int(0, 0); \
+		recursive_int *temppos = sought;                   \
+		while (interri->ri)                                \
+		{                                                  \
+			while (interri->value CHECK_OPERATOR 0)        \
+				interri = interri->ri;                     \
+			temppos->value = interri->value;               \
+			if (interri->ri)                               \
+			{                                              \
+				temppos->ri = recursive_int_from_ll(0);    \
+				temppos = temppos->ri;                     \
+				interri = interri->ri;                     \
+			}                                              \
+		}                                                  \
+		return sought;                                     \
+	}
+
 recursive_int *alloc_recursive_int(long long value, recursive_int *subri)
 {
 	recursive_int *ri = (recursive_int *)malloc(sizeof(recursive_int));
@@ -59,7 +80,7 @@ recursive_int *recursive_int_abs(recursive_int *ri)
 {
 	recursive_int *tempri = ri;
 	tempri->value = llabs(tempri->value);
-	while (ri->ri)
+	while (tempri->ri)
 	{
 		tempri = tempri->ri;
 		tempri->value = llabs(tempri->value);
@@ -71,7 +92,7 @@ recursive_int *recursive_int_addinv(recursive_int *ri)
 {
 	recursive_int *tempri = ri;
 	tempri->value = -tempri->value;
-	while (ri->ri)
+	while (tempri->ri)
 	{
 		tempri = tempri->ri;
 		tempri->value = -tempri->value;
@@ -79,46 +100,8 @@ recursive_int *recursive_int_addinv(recursive_int *ri)
 	return ri;
 }
 
-// TODO: conduct refactoring! (use macros for these two...)
-recursive_int *get_positive(recursive_int *ri)
-{
-	recursive_int *interri = ri;
-	recursive_int *positive = alloc_recursive_int(0, 0);
-	recursive_int *temppos = positive;
-	while (interri->ri)
-	{
-		while (interri->value < 0)
-			interri = interri->ri;
-		temppos->value = interri->value;
-		if (interri->ri)
-		{
-			temppos->ri = recursive_int_from_ll(0);
-			temppos = temppos->ri;
-			interri = interri->ri;
-		}
-	}
-	return positive;
-}
-
-recursive_int *get_negative(recursive_int *ri)
-{
-	recursive_int *interri = ri;
-	recursive_int *negative = alloc_recursive_int(0, 0);
-	recursive_int *tempneg = negative;
-	while (interri->ri)
-	{
-		while (interri->value > 0)
-			interri = interri->ri;
-		tempneg->value = interri->value;
-		if (interri->ri)
-		{
-			tempneg->ri = recursive_int_from_ll(0);
-			tempneg = tempneg->ri;
-			interri = interri->ri;
-		}
-	}
-	return negative;
-}
+get_signed(positive, <=)
+get_signed(negative, >=)
 
 recursive_int *recursive_zero()
 {

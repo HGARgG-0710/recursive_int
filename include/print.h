@@ -18,7 +18,7 @@ wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned shor
 
 wchar_t *symbolic_addition(wchar_t *, wchar_t *, unsigned short base);
 wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base);
-wchar_t *symbolic_plus(wchar_t *, wchar_t *, unsigned short base);
+wchar_t *symbolic_plus(wchar_t *, wchar_t *);
 
 wchar_t* recursive_int_print(recursive_int *, unsigned short base);
 wchar_t* recursive_int_print_sum(recursive_int *, unsigned short base);

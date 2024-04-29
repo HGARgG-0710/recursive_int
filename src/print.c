@@ -6,6 +6,10 @@
 
 #include "../include/print.h"
 
+#define symbolic_abs(IDENTIFIER, COPY)                      \
+	IDENTIFIER = (wchar_t *)malloc(sizeof(IDENTIFIER) - 1); \
+	wcsncpy(IDENTIFIER, COPY + 1, wcslen(COPY) - 1)
+
 wchar_t *string_reverse(wchar_t *string)
 {
 	wchar_t *reversed = (wchar_t *)malloc(sizeof(string));
@@ -72,7 +76,7 @@ wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base)
 	return dest;
 }
 
-// todo: this algorithm does not take in account the fact that this thing is reversed!
+// todo: these algorithms do not take in account the fact that this thing is reversed!
 // ! FIX THIS! [look for this bug in the other methods as well];
 wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 {
@@ -89,25 +93,19 @@ wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned shor
 	return dest;
 }
 
+// ! PROBLEM - does not work for things like '100' + '100', say. DOES NOT INCREASE THE LENGTH dynamically!
 wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
 {
 	const bool aneg = a[0] == "-", bneg = b[0] == "-";
 	if (aneg != bneg)
 	{
 		wchar_t *ca = a, *cb = b;
-		// TODO: macro... refactor...;
-		if (aneg)
-		{
-			a = (wchar_t *)malloc(sizeof(a) - 1);
-			wcsncpy(a, ca + 1, wcslen(ca) - 1);
-		}
-		else
-		{
-			b = (wchar_t *)malloc(sizeof(b) - 1);
-			wcsncpy(b, cb + 1, wcslen(cb) - 1);
-		}
-		wchar_t *subtracted = symbolic_subtraction(aneg ? b : a, aneg ? a : b, base);
-		free(aneg ? a : b);
+		wchar_t *c = aneg ? a : b,
+				*cc = aneg ? ca : cb,
+				*d = aneg ? b : a;
+		symbolic_abs(c, cc);
+		wchar_t *subtracted = symbolic_subtraction(d, c, base);
+		free(c);
 		return subtracted;
 	}
 
@@ -120,7 +118,7 @@ wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
 }
 
 // TODO: later - generalize to the 'coeff' idea (represent the repeating sums as products) - this'll require a structure with wchar_t** pointer;
-wchar_t *symbolic_plus(wchar_t *a, wchar_t *b, unsigned short base)
+wchar_t *symbolic_plus(wchar_t *a, wchar_t *b)
 {
 	const bool positive = b[0] != "-";
 	wchar_t *plused = (wchar_t *)malloc(sizeof(a) + positive * sizeof(wchar_t) + sizeof(b));
@@ -154,7 +152,7 @@ wchar_t *recursive_int_print_sum(recursive_int *ri, unsigned short base)
 		ri = ri->ri;
 		wchar_t *next = base_representation(ri->value, base);
 		wchar_t *copy = final;
-		final = symbolic_plus(final, next, base);
+		final = symbolic_plus(final, next);
 		free(copy);
 		free(next);
 	}
