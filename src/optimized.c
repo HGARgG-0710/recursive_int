@@ -1,3 +1,5 @@
+// ^ IDEA: create the general 'non-optimized' algorithms that would rely upon dynamic decision of 'directions' of change (note - the 'optimized' version still stays as it is faster (an O(1) operations turn into O(n)); the general one goes into either 'base' or 'recursive_int');
+
 #include "../include/optimized.h"
 
 #define recursive_int_minimize_signed(LIMIT, SIGN)                        \
@@ -46,35 +48,49 @@ recursive_int *recursive_int_diff(recursive_int *dest, recursive_int *origin)
 	return diffed;
 }
 
+long long inc(long long v)
+{
+	return v + 1;
+}
+
+long long dec(long long v)
+{
+	return v - 1;
+}
+
 recursive_int *recursive_int_sum(recursive_int *dest, recursive_int *origin)
 {
 	const bool destSign = dest->value >= 0,
 			   origSign = origin->value >= 0;
 	const bool direction = destSign == origSign;
 
+	long long (*origChange)(long long) = origSign ? dec : inc;
+
 	if (direction)
 	{
-		const recursive_int *(*change)(recursive_int *) = origSign ? recursive_int_inc : recursive_int_dec;
+		recursive_int *(*change)(recursive_int *) = origSign ? recursive_int_inc : recursive_int_dec;
 		while (!optimized_is_zero(origin))
 		{
 			while (!origin->value)
 				origin = origin->ri;
 			dest = change(dest);
-			origin->value = origSign ? origin->value - 1 : origin->value + 1;
+			origin->value = origChange(origin->value);
 		}
 		return dest;
 	}
 
+	long long (*destChange)(long long) = destSign ? dec : inc;
+	recursive_int_addinv(!destSign ? dest : origin);
 	const long long maxval = destSign ? LLONG_MAX : LLONG_MIN;
 
 	while (!optimized_is_zero(origin) && !optimized_is_zero(dest))
 	{
-		while (!origin->value)
+		while (!origin->value && origin->ri)
 			origin = origin->ri;
-		while (dest->value == maxval)
+		while (dest->value == maxval && dest->ri)
 			dest = dest->ri;
-		dest->value = destSign ? dest->value + 1 : dest->value - 1;
-		origin->value = origSign ? origin->value - 1 : origin->value + 1;
+		dest->value = destChange(dest->value);
+		origin->value = origChange(origin->value);
 	}
 
 	return optimized_is_zero(origin) ? dest : origin;
@@ -82,14 +98,14 @@ recursive_int *recursive_int_sum(recursive_int *dest, recursive_int *origin)
 
 bool recursive_int_equal_optimized(recursive_int *a, recursive_int *b)
 {
+	if (a->value != b->value)
+		return false;
 	while (a->ri && b->ri)
 	{
-		if (a->value != b->value)
-			return false;
 		a = a->ri;
 		b = b->ri;
 	}
-	return !a->ri == !b->ri;
+	return !a->ri && !b->ri;
 }
 
 bool lesseroe(long long a, long long b)
