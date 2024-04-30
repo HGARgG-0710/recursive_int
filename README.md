@@ -10,6 +10,8 @@ only limitations are due to the user's RAM.
 
 NOTE: in the future, the library's orientation may change drastically (as a result of expansion).
 
+temp note: library's still not recommended for use, as there is presently a great space for optimization. 
+
 ## Documentation
 
 ### Definition
@@ -109,6 +111,14 @@ recursive_int *recursive_zero()
 Allocates and returns a pointer to the `recursive_int` equivalent of `0`.
 
 &nbsp;
+
+```c
+recursive_int *recursive_int_from_ll(long long v)
+```
+
+An alias for allocation of a new `recursive_int` of depth `1` with `value` of `v` (direct conversion from `long long`).
+
+&nbsp; 
 
 ```c
 recursive_int *get_negative(recursive_int * ri)

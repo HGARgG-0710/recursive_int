@@ -1,6 +1,15 @@
 1. Add more operations;
 	2.1. Modulo; 
 	2.2. Whole division;
-2. Do a mighty correctness check (in regard to allocations);
-3. Finish writing the tests (choose examples - think how to organize them to do it quickly... don't want to waste another week on it); 
-4. ESSENTIAL: check the names - C has a funnily small length limitation on them distinction-wise...; 
+2. Run tests (fix bugs)
+3. OPTIMIZE:
+
+	Currently, loops that resolve the recursion are all done in terms of the individual increments/decrements 
+		(when it comes to arithmetic binary operations, + and * in particular...); 
+	This causes large enough arithmetic to grind to a halt. 
+	To fix, take out ('abs'-wise) THE SMALLEST IN 'ABS' OF THE TWO VALUES ON CURRENT LEVELS!
+		THEN, JUST GO FORWARD AS PREVIOUSLY!
+
+	See if that's a problem anywhere else in the library...; 
+
+4. (precaution) Make tests slightly more thorough...; 

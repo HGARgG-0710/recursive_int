@@ -24,11 +24,11 @@ bool recursive_int_sign(recursive_int *ri)
 
 bool recursive_int_greater(recursive_int *a, recursive_int *b)
 {
-	recursive_int *bc = recursive_int_copy(b);
-	recursive_int *acopy = recursive_int_diff(recursive_int_copy(a), bc);
-	const bool is_greater = acopy->value >= 0;
+	recursive_int *ac = recursive_int_copy(a),
+				  *bc = recursive_int_copy(b);
+	const bool is_greater = recursive_int_diff(ac, bc)->value >= 0;
+	free_recursive_int(ac);
 	free_recursive_int(bc);
-	free_recursive_int(acopy);
 	return is_greater;
 }
 
@@ -42,6 +42,8 @@ bool recursive_int_equal(recursive_int *a, recursive_int *b)
 	return equal;
 }
 
+// TODO: OPTIMIZE THOSE ALGORITHMS - the cost of a single loop iteration is too bloody high. INSTEAD, delete them - level-by-level, take down the lowest of the two. This will also eliminate the 'while' (partially);
+// * The algorithms for addition and multiplication will ABSOLUTELY CHOKE on larger values...;
 recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 {
 	recursive_int *opdest = recursive_int_optimize(dest),
@@ -53,15 +55,25 @@ recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 		oporig = recursive_int_addinv(oporig);
 	}
 
-	while (!optimized_is_zero(oporig))
+	recursive_int *destcopy = recursive_int_copy(opdest);
+
+	--oporig->value;
+	if (!oporig->value)
 	{
-		oporig->value -= 1;
-		while (!oporig->value && oporig->ri)
-			oporig = oporig->ri;
-		recursive_int *destcopy = recursive_int_copy(opdest);
-		dest = recursive_int_sum(dest, destcopy);
+		recursive_int *t = oporig->ri;
+		free(oporig);
+		oporig = t;
 	}
 
+	while (!optimized_is_zero(oporig))
+	{
+		--oporig->value;
+		while (!oporig->value && oporig->ri)
+			oporig = oporig->ri;
+		opdest = recursive_int_sum(opdest, destcopy);
+	}
+
+	free_recursive_int(destcopy);
 	return opdest;
 }
 

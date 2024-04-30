@@ -22,6 +22,7 @@ recursive_int *recursive_int_inc(recursive_int *);
 recursive_int *recursive_int_dec(recursive_int *);
 
 recursive_int *recursive_zero();
+recursive_int *recursive_int_from_ll(long long value);
 
 recursive_int *get_negative(recursive_int *);
 recursive_int *get_positive(recursive_int *);

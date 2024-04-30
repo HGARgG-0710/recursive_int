@@ -135,6 +135,18 @@ int main()
 	free(g1);
 	free(o1g1);
 
+	// ^ the test of 'recursive_int_from_ll'; 
+
+	long long testval = 1051513; 
+	recursive_int * fromll = recursive_int_from_ll(testval); 
+	wchar_t * out = recursive_int_print(fromll, 10);
+	
+	printf("Recursive int from-long-long conversion test 1 (in): %lld\n", testval); 	
+	printf("Recursive int from-long-long conversion test 1 (out): %ls\n", out); 
+
+	free(out); 
+	free_recursive_int(fromll); 
+
 	// ^ the test of: 'get_negative' and 'get_positive';
 
 	recursive_int *fposneg = alloc_recursive_int(-1343290,

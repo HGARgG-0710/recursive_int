@@ -217,7 +217,7 @@ int main()
 
 	recursive_int *r11 = alloc_recursive_int(LLONG_MIN + 77151, alloc_recursive_int(LLONG_MIN + 15151343, alloc_recursive_int(LLONG_MIN + 141890, alloc_recursive_int(-3413, false))));
 	recursive_int *r12 = recursive_int_copy(r11);
-	recursive_int *r13 = alloc_recursive_int(77151, alloc_recursive_int(alloc_recursive_int(LLONG_MAX - 66086, false)));
+	recursive_int *r13 = alloc_recursive_int(77151, alloc_recursive_int(5151342, alloc_recursive_int(LLONG_MAX - 66086, false)));
 
 	recursive_int *opr11 = recursive_int_optimize(r11);
 	recursive_int *opr12 = recursive_int_optimize(r12);
