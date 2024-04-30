@@ -88,6 +88,8 @@ recursive_int *recursive_int_inc(recursive_int *)
 
 Increments the given recursive integer in the following fashion - if its top is above `LLONG_MAX`, then it allocates a new `recursive_int` based of the given one with the `value` of `1` and returns a pointer to it. Otherwise - just adds one to the top layer of the `recursive_int`.
 
+Preserves optimized-ness for positive values only.
+
 &nbsp;
 
 ```c
@@ -95,6 +97,8 @@ recursive_int *recursive_int_dec(recursive_int *)
 ```
 
 A decrement of the given `recursive_int` defined in the same fashion as `recursive_int_inc`, except for now one is checking for `LLONG_MIN`.
+
+Preserves optimizedness for negative values only.
 
 &nbsp;
 
@@ -212,10 +216,30 @@ Sum between two `recursive_int`s without sign alteration (preserves optimized-ne
 &nbsp;
 
 ```c
-recursive_int *recursive_int_minize(recursive_int *)
+bool greateroe(long long x, long long y);
 ```
 
-Eliminates all the `0`s and other non-`LLONG_MAX`/non-`LLONG_MIN` values (up to 1).
+A functional equivalent of `x >= y`.
+
+&nbsp;
+
+```c
+bool lesseroe(long long x, long long y);
+```
+
+A functional equivalent of `x <= y`.
+
+&nbsp;
+
+```c
+recursive_int *recursive_int_minimize(recursive_int *)
+```
+
+Eliminates all the `0`s and other non-`LLONG_MAX`/non-`LLONG_MIN` values (up to 1)
+with preservation of the final value of the sum (it does that by means of 'shrinking' the sum's value);
+
+NOTE: the only possible value that is non-`LLONG_MAX`/non-`LLONG_MIN` is at the BOTTOM (end) of the linked list.
+This way, this first has got to be reversed with `recursive_int_optimized_revert`.
 
 &nbsp;
 
@@ -239,7 +263,10 @@ Checks whether the given optimized `recursive_int` is zero.
 recursive_int *recursive_int_optimized_revert(recursive_int *)
 ```
 
-Reverts the order of summands inside the given `recursive_int`.
+Reverts the order of summands inside the given optimized `recursive_int`.
+
+NOTE: in practice, all it does is change the first and last nodes places, returning the pointer to the new first one.
+For optimized values, this is a sum-equivalent of a full revert.
 
 &nbsp;
 

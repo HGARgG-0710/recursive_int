@@ -100,8 +100,8 @@ recursive_int *recursive_int_addinv(recursive_int *ri)
 	return ri;
 }
 
-get_signed(positive, <=)
-get_signed(negative, >=)
+get_signed(positive, <=);
+get_signed(negative, >=);
 
 recursive_int *recursive_zero()
 {
@@ -112,6 +112,8 @@ recursive_int *first_not_full(recursive_int *ri)
 {
 	while ((ri->value == LLONG_MAX || ri->value == LLONG_MIN) && ri->ri)
 		ri = ri->ri;
+	if (ri->value == LLONG_MAX || ri->value == LLONG_MIN)
+		return false;
 	return ri;
 }
 

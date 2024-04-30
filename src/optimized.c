@@ -92,19 +92,50 @@ bool recursive_int_equal_optimized(recursive_int *a, recursive_int *b)
 	return !a->ri == !b->ri;
 }
 
-recursive_int *recursive_int_minize(recursive_int *ri)
+bool lesseroe(long long a, long long b)
 {
-	if (ri->value >= 0)
+	return a <= b;
+}
+bool greateroe(long long a, long long b)
+{
+	return a >= b;
+}
+
+recursive_int *recursive_int_minimize(recursive_int *ri)
+{
+	if (!ri->ri)
+		return ri;
+
+	const bool sign = ri->value >= 0;
+	const long long LIMIT = sign ? LLONG_MAX : LLONG_MIN;
+	bool (*compare)(long long, long long) = sign ? lesseroe : greateroe;
+
+	recursive_int *topri = ri->value == LIMIT ? ri->ri : ri;
+	recursive_int *ricurr = topri->ri;
+
+	while (ricurr->ri)
 	{
-		recursive_int_minimize_signed(LLONG_MAX, <=)
+		ricurr = topri->ri;
+		if (compare(topri->value, LIMIT - ricurr->value))
+		{
+			topri->value += ricurr->value;
+			topri->ri = ricurr->ri;
+			free(ricurr);
+			continue;
+		}
+		const long long diff = -((LIMIT - topri->value) - ricurr->value);
+		topri->value = LIMIT;
+		ricurr->value -= diff;
+		topri = topri->ri;
 	}
-	recursive_int_minimize_signed(LLONG_MIN, >=)
+	return ri;
 }
 
 recursive_int *de_zero(recursive_int *ri)
 {
 	if (!ri->ri)
 		return ri;
+	// * clearing zeros from the top (finding the top-ri to be returned);
 	recursive_int *topri = ri;
 	recursive_int *r = topri->ri;
 	while (!topri->value && topri->ri)
@@ -112,6 +143,27 @@ recursive_int *de_zero(recursive_int *ri)
 		free(topri);
 		topri = r;
 		r = topri->ri;
+	}
+	// * clearing the middle zeros;
+	recursive_int *midri = r;
+	recursive_int *concatri = topri;
+	while (midri->ri)
+	{
+		if (!midri->value)
+		{
+			r = midri->ri;
+			free(midri);
+			midri = r;
+			concatri->ri = midri;
+		}
+		concatri = concatri->ri;
+		midri = midri->ri;
+	}
+	// * clearing the potentially missed last zero;
+	if (!midri->value)
+	{
+		free(midri);
+		concatri->ri = false;
 	}
 	return topri;
 }
@@ -125,8 +177,8 @@ recursive_int *recursive_int_optimized_revert(recursive_int *ri)
 {
 	if (!ri->ri)
 		return ri;
-	recursive_int *last = recursive_int_set_last(ri, ri);
-	recursive_int *newfirst = ri->ri;
+	recursive_int *prevlast = recursive_int_set_last(ri, ri);
+	prevlast->ri = ri->ri;
 	ri->ri = false;
-	return newfirst;
+	return prevlast;
 }
