@@ -10,17 +10,17 @@ int main()
 	recursive_int *r1 = alloc_recursive_int(0, alloc_recursive_int(0, alloc_recursive_int(45999354, alloc_recursive_int(-7732, alloc_recursive_int(0, alloc_recursive_int(5151546, alloc_recursive_int(0, alloc_recursive_int(661464, false))))))));
 	recursive_int *dez = de_zero(r1);
 
-	wchar_t *a1 = recursive_int_print_sum(r1, 10);
-	wchar_t *o1a1 = recursive_int_print_sum(dez, 10);
+	wchar_t *dezin = recursive_int_print_sum(r1, 10);
+	wchar_t *dezout = recursive_int_print_sum(dez, 10);
 
-	printf("Recursive int de-zero test 1 (in): \n", a1);
-	printf("Recursive int de-zero test 1 (out): \n", o1a1);
+	printf("Recursive int de-zero test 1 (in): %ls\n", dezin);
+	printf("Recursive int de-zero test 1 (out): %ls\n", dezout);
 
 	free_recursive_int(r1);
 	free_recursive_int(dez);
 
-	free(a1);
-	free(o1a1);
+	free(dezin);
+	free(dezout);
 
 	// ^ test of: recursive_int_minimize;
 
@@ -150,7 +150,7 @@ int main()
 	free(o1b3);
 
 	free(c1a);
-	free(c1a);
+	free(c1b);
 	free(c2a);
 	free(c2b);
 	free(c3a);

@@ -1,7 +1,7 @@
 #include "../include/base.h"
 
 #define get_signed(NAME, CHECK_OPERATOR)                   \
-	recursive_int *get_##NAME##(recursive_int * ri)        \
+	recursive_int *get_##NAME(recursive_int * ri)        \
 	{                                                      \
 		recursive_int *interri = ri;                       \
 		recursive_int *sought = alloc_recursive_int(0, 0); \

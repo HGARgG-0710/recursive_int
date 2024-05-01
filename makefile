@@ -1,6 +1,7 @@
 # ? Support more different compilers? 
-gcc: include/*.h src/*.c
-	mkdir build	
+# ! Support more operating systems! [this is batch file - windows only...]; 
+gccwin32: include/*.h src/*.c
+	if not exist build/ mkdir build
 	gcc -Wall -c -o build/base.o -Iinclude src/base.c
 	gcc -Wall -c -o build/optimized.o -Iinclude src/optimized.c
 	gcc -Wall -c -o build/recursive_int.o -Iinclude src/recursive_int.c	

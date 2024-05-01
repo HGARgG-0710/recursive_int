@@ -5,6 +5,7 @@
 #include <locale.h>
 #include <string.h>
 #include <math.h>
+
 #include "base.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))

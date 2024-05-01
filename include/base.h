@@ -5,9 +5,9 @@
 #include <limits.h>
 #include <stdbool.h>
 
-typedef struct
+typedef struct _rint
 {
-	recursive_int *ri;
+	struct _rint *ri;
 	long long value;
 } recursive_int;
 

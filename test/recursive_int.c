@@ -42,7 +42,7 @@ int main()
 	recursive_int *product = recursive_int_mult(r3, r4);
 
 	wchar_t *c1a = recursive_int_print(r3, 10),
-			c1b = recursive_int_print(r4, 10);
+			*c1b = recursive_int_print(r4, 10);
 	wchar_t *o1c1 = recursive_int_print(product, 10);
 
 	printf("Recursive int multiplication test 1 (in): %ls %ls", c1a, c1b);
@@ -90,7 +90,7 @@ int main()
 	recursive_int *r10 = alloc_recursive_int(15151, alloc_recursive_int(LLONG_MAX - 23, false));
 
 	wchar_t *f1 = recursive_int_print(r9, 10),
-			f2 = recursive_int_print(r10, 10);
+			*f2 = recursive_int_print(r10, 10);
 
 	bool o1f1 = recursive_int_llfit(r9),
 		 o1f2 = recursive_int_llfit(r10);

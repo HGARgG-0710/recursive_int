@@ -3,39 +3,43 @@
 int main()
 {
 	// ^ test for: string_reverse;
-	setlocale(LC_ALL, "C.UTF-8");
-	wchar_t *a1 = "This is a string. HubbaBubba!";
+	setlocale(LC_ALL, ".utf8");
 
+	wchar_t *a1 = (wchar_t *)L"This is a string. HubbaBubba!";
 	wchar_t *oa1 = string_reverse(a1);
-	printf("Reversed test 1 (in):%ls \n", a1);
-	printf("Reversed test 1 (out):%ls \n\n", oa1);
+
+	printf("Reversed test 1 (in): %ls \n", a1);
+	printf("Reversed test 1 (out): %ls \n\n", oa1);
+
 	free(oa1);
 
-	wchar_t *a2 = "-";
+	wchar_t *a2 = (wchar_t *)L"-";
 	wchar_t *oa2 = string_reverse(a2);
-	printf("Reversed test 2 (in):%ls \n", a2);
-	printf("Reversed test 2 (out):%ls \n\n", oa2);
+	printf("Reversed test 2 (in): %ls \n", a2);
+	printf("Reversed test 2 (out): %ls \n\n", oa2);
 	free(oa2);
 
 	// ^ test for: base_representation;
 	long long b1 = 4443090;
 	long long b2 = -902;
-	long long o1b1 = base_representation(b1, 8),
-			  o2b1 = base_representation(b1, 2),
-			  o3b1 = base_representation(b1, 10),
-			  o4b1 = base_representation(b1, 1219);
-	long long o1b2 = base_representation(b2, 2),
-			  o2b2 = base_representation(b2, 115);
+	wchar_t *o1b1 = base_representation(b1, 8),
+			*o2b1 = base_representation(b1, 2),
+			*o3b1 = base_representation(b1, 10),
+			*o4b1 = base_representation(b1, 1219);
+	wchar_t *o1b2 = base_representation(b2, 2),
+			*o2b2 = base_representation(b2, 115);
 
-	printf("Base representation test 1 (in):%ls \n", b1);
-	printf("Base representation test 1 (out, 1):%ls \n", o1b1);
-	printf("Base representation test 1 (out, 2):%ls \n", o2b1);
-	printf("Base representation test 1 (out, 3):%ls \n", o3b1);
-	printf("Base representation test 1 (out, 4):%ls \n\n", o4b1);
+	printf("Base representation test 1 (in): %lld \n", b1);
+	printf("Base representation test 1 (out, 1): %ls \n", o1b1);
+	printf("Base representation test 1 (out, 2): %ls \n", o2b1);
+	printf("Base representation test 1 (out, 3): %ls \n", o3b1);
+	printf("Base representation test 1 (out, 4): %ls \n\n", o4b1);
 
-	printf("Base representation test 2 (in):%ls \n", b2);
-	printf("Base representation test 2 (out, 1):%ls \n", o2b1);
-	printf("Base representation test 2 (out, 2):%ls \n\n", o2b2);
+	printf("Base representation test 2 (in): %lld \n", b2);
+	printf("Base representation test 2 (out, 1): %ls \n", o1b2);
+	// % This right here is a fantastic example of why using UTF8 to represent number bases is a BAD idea.
+	// TODO: in future versions of the library, replace with proper alphabets API...;
+	printf("Base representation test 2 (out, 2): %ls \n\n", o2b2);
 
 	free(o1b1);
 	free(o2b1);
@@ -44,6 +48,8 @@ int main()
 	free(o1b2);
 	free(o2b2);
 
+	// TODO: ALL PAST THIS DOESN'T WORK PROPERLY! [the 'symbolic_add' is supposed to work differently...];
+	exit(1);
 	// ^ test for: symbolic_bit_add;
 	wchar_t c1a[4], c1b[4];
 
@@ -114,13 +120,13 @@ int main()
 
 	// ^ tests for: symbolic_plus;
 
-	wchar_t *g1a = "231203";
-	wchar_t *g1b = "112";
+	wchar_t *g1a = (wchar_t *)"231203";
+	wchar_t *g1b = (wchar_t *)"112";
 
 	wchar_t *o1g1 = symbolic_plus(g1a, g1b);
 
-	wchar_t g2a = "-abc204";
-	wchar_t g2b = "-20943";
+	wchar_t *g2a = (wchar_t *)"-abc204";
+	wchar_t *g2b = (wchar_t *)"-20943";
 
 	wchar_t *o1g2 = symbolic_plus(g2a, g2b);
 
@@ -142,7 +148,7 @@ int main()
 							.value = 88043,
 							.ri = &(recursive_int){
 								.value = -741234,
-								.ri = (recursive_int){
+								.ri = &(recursive_int){
 									.value = -292292,
 									.ri = false}}}};
 

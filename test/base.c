@@ -1,13 +1,5 @@
 #include "../include/print.h"
 
-// ! NOTE: the general shape for the tests is:
-// 		1. check the function for the cases of some great depth;
-// 		2. check the function for the cases of depth 1;
-// 		3. check the function for the cases of 0;
-// * This is PER A SINGLE ARGUMENT! So, the formula for the number of tests is:
-// 		3 * argslen
-// For testing, first finish another todo and implement a printing function;
-
 int main()
 {
 	// ^ the test of: 'alloc_recursive_int' and 'free_recursive_int';
@@ -34,7 +26,7 @@ int main()
 	// ^ the test of: 'recursive_int_copy';
 
 	recursive_int *r3 = alloc_recursive_int(100090, alloc_recursive_int(-99097, alloc_recursive_int(779, false)));
-	recursive_int *r4 = recrusive_int_copy(r3);
+	recursive_int *r4 = recursive_int_copy(r3);
 	r4->value++;
 	r4->ri->value++;
 	r4->ri->ri->value--;
@@ -125,8 +117,8 @@ int main()
 	// ^ the test of: 'recursive_zero';
 
 	recursive_int *zero = recursive_zero();
-	recursive_int *g1 = recursive_int_print(zero, 10);
-	recursive_int *o1g1 = recursive_int_print_sum(zero, 10);
+	wchar_t *g1 = recursive_int_print(zero, 10);
+	wchar_t *o1g1 = recursive_int_print_sum(zero, 10);
 
 	printf("Recursive zero test (in): %ls\n", g1);
 	printf("Recursive zero test (out): %ls\n\n", o1g1);
@@ -135,17 +127,17 @@ int main()
 	free(g1);
 	free(o1g1);
 
-	// ^ the test of 'recursive_int_from_ll'; 
+	// ^ the test of 'recursive_int_from_ll';
 
-	long long testval = 1051513; 
-	recursive_int * fromll = recursive_int_from_ll(testval); 
-	wchar_t * out = recursive_int_print(fromll, 10);
-	
-	printf("Recursive int from-long-long conversion test 1 (in): %lld\n", testval); 	
-	printf("Recursive int from-long-long conversion test 1 (out): %ls\n", out); 
+	long long testval = 1051513;
+	recursive_int *fromll = recursive_int_from_ll(testval);
+	wchar_t *out = recursive_int_print(fromll, 10);
 
-	free(out); 
-	free_recursive_int(fromll); 
+	printf("Recursive int from-long-long conversion test 1 (in): %lld\n", testval);
+	printf("Recursive int from-long-long conversion test 1 (out): %ls\n", out);
+
+	free(out);
+	free_recursive_int(fromll);
 
 	// ^ the test of: 'get_negative' and 'get_positive';
 
@@ -281,7 +273,7 @@ int main()
 
 	// ^ the test of: 'recursive_int_depth';
 	recursive_int *r19 = alloc_recursive_int(343109, alloc_recursive_int(-78623, alloc_recursive_int(79866, alloc_recursive_int(445698, false))));
-	recursive_int *r20 = recurisve_zero();
+	recursive_int *r20 = recursive_zero();
 
 	recursive_int *depth1 = recursive_int_depth(r19),
 				  *depth2 = recursive_int_depth(r20);
