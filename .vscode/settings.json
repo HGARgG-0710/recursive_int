@@ -25,6 +25,7 @@
 		"recursive_int_struct.h": "c",
 		"base.h": "c",
 		"print.h": "c",
-		"locale.h": "c"
+		"locale.h": "c",
+		"string.h": "c"
 	}
 }

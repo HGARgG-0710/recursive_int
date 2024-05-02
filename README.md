@@ -10,7 +10,8 @@ only limitations are due to the user's RAM.
 
 NOTE: in the future, the library's orientation may change drastically (as a result of expansion).
 
-temp note: library's still not recommended for use, as there is presently a great space for optimization. 
+temp note: library's still not recommended for use, as there is presently a great space for optimization.
+Also - some of the methods could use a bit of re-doing (particularly true of the `print` module).
 
 ## Documentation
 
@@ -118,7 +119,7 @@ recursive_int *recursive_int_from_ll(long long v)
 
 An alias for allocation of a new `recursive_int` of depth `1` with `value` of `v` (direct conversion from `long long`).
 
-&nbsp; 
+&nbsp;
 
 ```c
 recursive_int *get_negative(recursive_int * ri)
@@ -382,11 +383,54 @@ NOTE: the UTF-16 values are used for construction of symbols for every given `ba
 &nbsp;
 
 ```c
-wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
+wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, long long pos, unsigned short base)
 ```
 
-"Adds" symbolicaly the contents of `add` at position `pos` to `dest` (altering it) and subtracts the value from `add` (altering it as well)
+"Adds" symbolicaly the last item of the `wchar_t` pointer `add`
+to `dest` at position `pos` (altering it) and subtracts the value from `add` (without altering it)
 in base `base`. Returns `dest`.
+
+NOTE: using a negative value for `pos` will cause the string to be reallocated and
+
+&nbsp;
+
+```c
+wchar_t * symbolic_right_shift(whcar_t *dest);
+```
+
+Performs a shift of the data of `dest` to the 'right' (the end of the string);
+The first element becomes `'0'`.
+
+NOTE: this doesn't reallocate the `dest`, instead using the already present length;
+
+&nbsp;
+
+```c
+wchar_t * symbolic_left_shift(whcar_t *dest);
+```
+
+A left (string beginning) equivalent of `symbolic_right_shift`.
+
+&nbsp;
+
+```c
+bool symbolic_greater(wchar_t * a, wchar_t * b);
+```
+
+Compares two numbers' strings representations and returns whether the first is greater than the second.
+Takes negativity into account.
+
+```c
+wchar_t *symbolic_new_size(wchar_t *total, size_t length);
+```
+
+Changes the symbolic "size" of the `total` to `length`.
+
+```c
+wchar_t *negate(wchar_t *a);
+```
+
+Allocates the negation of the value of `a` and returns it (handles multiple negative signs as well).
 
 &nbsp;
 
