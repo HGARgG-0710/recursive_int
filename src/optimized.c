@@ -81,7 +81,7 @@ recursive_int *recursive_int_sum(recursive_int *dest, recursive_int *origin)
 
 	long long (*destChange)(long long) = destSign ? dec : inc;
 	recursive_int_addinv(!destSign ? dest : origin);
-	const long long maxval = destSign ? LLONG_MAX : LLONG_MIN;
+	const long long maxval = destSign ? LLONG_MAX : LLONG_MIN + 1;
 
 	while (!optimized_is_zero(origin) && !optimized_is_zero(dest))
 	{
@@ -123,7 +123,7 @@ recursive_int *recursive_int_minimize(recursive_int *ri)
 		return ri;
 
 	const bool sign = ri->value >= 0;
-	const long long LIMIT = sign ? LLONG_MAX : LLONG_MIN;
+	const long long LIMIT = sign ? LLONG_MAX : LLONG_MIN + 1;
 	bool (*compare)(long long, long long) = sign ? lesseroe : greateroe;
 
 	recursive_int *topri = ri->value == LIMIT ? ri->ri : ri;

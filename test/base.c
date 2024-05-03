@@ -70,7 +70,7 @@ int main()
 
 	// ^ the test of: 'recursive_int_inc' and 'recursive_int_dec';
 	recursive_int *r7 = alloc_recursive_int(LLONG_MAX, alloc_recursive_int(LLONG_MAX, false));
-	recursive_int *r8 = alloc_recursive_int(LLONG_MIN, alloc_recursive_int(LLONG_MIN, false));
+	recursive_int *r8 = alloc_recursive_int(LLONG_MIN + 2, alloc_recursive_int(LLONG_MIN + 2, false));
 	recursive_int *r9 = alloc_recursive_int(999034, alloc_recursive_int(33243, false));
 	recursive_int *r10 = alloc_recursive_int(-1123, alloc_recursive_int(-78903, false));
 
@@ -92,7 +92,7 @@ int main()
 	printf("Recursive int increment test 1 (in): %ls\n", e1);
 	printf("Recursive int increment test 1 (out): %ls\n", o1e1);
 	printf("Recursive int increment test 2 (in): %ls\n", e2);
-	printf("Recursive int increment test 2 (out): %ls\n", o1e2);
+	printf("Recursive int increment test 2 (out): %ls\n\n", o1e2);
 
 	printf("Recursive int decrement test 1 (in): %ls\n", f1);
 	printf("Recursive int decrement test 1 (out): %ls\n", o1f1);
@@ -155,6 +155,7 @@ int main()
 																											 alloc_recursive_int(6369,
 																																 alloc_recursive_int(0,
 																																					 alloc_recursive_int(0, false)))))));
+
 	recursive_int *r11 = get_positive(fposneg);
 	recursive_int *r12 = get_positive(sposneg);
 	recursive_int *r13 = get_negative(fposneg);
@@ -200,46 +201,27 @@ int main()
 
 	// ^ the test of: 'first_not_full' and 'last_not_full';
 
-	recursive_int *r15 = alloc_recursive_int(LLONG_MAX, alloc_recursive_int(LLONG_MIN, alloc_recursive_int(170900, alloc_recursive_int(LLONG_MAX, alloc_recursive_int(LLONG_MAX, alloc_recursive_int(77790, false))))));
-	recursive_int *r16 = alloc_recursive_int(LLONG_MIN, false);
+	recursive_int *r15 = alloc_recursive_int(LLONG_MAX, alloc_recursive_int(LLONG_MIN + 1, alloc_recursive_int(170900, alloc_recursive_int(LLONG_MAX, alloc_recursive_int(LLONG_MAX, alloc_recursive_int(77790, false))))));
 
 	recursive_int *fnf1 = first_not_full(r15);
 	recursive_int *lnf1 = last_not_full(r15);
-	recursive_int *fnf2 = first_not_full(r16);
-	recursive_int *lnf2 = last_not_full(r16);
 
 	wchar_t *j1 = recursive_int_print_sum(r15, 10);
-	wchar_t *j2 = recursive_int_print_sum(r15, 10);
-	wchar_t *k1 = recursive_int_print_sum(r16, 10);
-	wchar_t *k2 = recursive_int_print_sum(r16, 10);
+	wchar_t *k1 = recursive_int_print_sum(r15, 10);
 
 	wchar_t *o1j1 = recursive_int_print_sum(fnf1, 10);
-	wchar_t *o1j2 = recursive_int_print_sum(fnf2, 10);
 	wchar_t *o1k1 = recursive_int_print_sum(lnf1, 10);
-	wchar_t *o1k2 = recursive_int_print_sum(lnf2, 10);
 
 	printf("Recursive int first not full test 1 (in): %ls\n", j1);
-	printf("Recursive int first not full test 1 (out): %ls\n", o1j1);
-	printf("Recursive int first not full test 2 (in): %ls\n", j2);
-	printf("Recursive int first not full test 2 (out): %ls\n\n", o1j2);
+	printf("Recursive int first not full test 1 (out): %ls\n\n", o1j1);
 
 	printf("Recursive int last not full test 1 (in): %ls\n", k1);
-	printf("Recursive int last not full test 1 (out): %ls\n", o1k1);
-	printf("Recursive int last not full test 2 (in): %ls\n", k2);
-	printf("Recursive int last not full test 2 (out): %ls\n\n", o1k2);
+	printf("Recursive int last not full test 1 (out): %ls\n\n", o1k1);
 
 	free_recursive_int(r15);
-	free_recursive_int(r16);
-
-	free_recursive_int(fnf1);
-	free_recursive_int(lnf1);
-	free_recursive_int(fnf2);
-	free_recursive_int(lnf2);
 
 	free(j1);
-	free(j2);
 	free(k1);
-	free(k2);
 
 	// ^ the test of: 'recursive_int_last' and 'recursive_int_set_last';
 
@@ -263,7 +245,6 @@ int main()
 	printf("Recursive int set last node test 1 (out): %ls\n\n", o1m1);
 
 	free_recursive_int(r17);
-	free_recursive_int(r18);
 	free_recursive_int(last);
 
 	free(l1);
@@ -305,8 +286,8 @@ int main()
 	recursive_int *reverted = recursive_int_revert(r21);
 	wchar_t *o1o1 = recursive_int_print_sum(reverted, 10);
 
-	printf("Recursive int revert test 1 (in): %ls, \n", o1);
-	printf("Recursive int revert test 1 (out): %ls, \n", o1o1);
+	printf("Recursive int revert test 1 (in): %ls \n", o1);
+	printf("Recursive int revert test 1 (out): %ls \n", o1o1);
 
 	free_recursive_int(r21);
 

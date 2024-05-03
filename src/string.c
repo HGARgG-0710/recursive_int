@@ -1,6 +1,5 @@
 // * Methods for working with strings
 
-#include <stdio.h>
 #include "../include/string.h"
 
 wchar_t *alloc_str(size_t elems)
@@ -25,15 +24,10 @@ wchar_t *str_append(wchar_t *string, long long newelems, wchar_t value)
 
 wchar_t *str_prepend(wchar_t *string, long long newelems, wchar_t value)
 {
-	// printf("\n\nSTRING TO PREPEND: %ls", string);
-	// printf("\nNEWELEMS: %lld", newelems);
 	const size_t newlen = wcslen(string) + newelems;
 	wchar_t *appended = (wchar_t *)malloc(sizeof(wchar_t) * (1 + newlen));
 	for (size_t i = 0; i < newelems; ++i)
-	{
-		// printf("\nI: %lld", i);
 		appended[i] = value;
-	}
 	wcscpy(appended + newelems, string);
 	appended[newlen] = 0;
 	return appended;

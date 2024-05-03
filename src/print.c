@@ -31,29 +31,20 @@ wchar_t *base_representation(long long number, unsigned short base)
 	{
 		wchar_t *absres = base_representation(llabs(number), base);
 		wchar_t *final = negate(absres);
-		// printf("\n\n\nNEG! %lld", number);
-		// printf("\nABS-D; %lld", llabs(number));
-		// printf("\nABSRES: %ls", absres);
-		// printf("\nRESULT: %ls\n\n", final);
 		free(absres);
 		return final;
 	}
+
 	const size_t pos = (size_t)(floor(log(number) / log(base)));
 	wchar_t *buffer = alloc_str(pos + 1);
-
-	// printf("\n\nPOS! %lld", number);
-	// printf("\nBASE: %d\n", base);
 
 	for (size_t i = 0; i < 1 + pos; ++i)
 	{
 		const unsigned short remainder = number % base;
-		// printf("? %d\n", remainder);
 		buffer[pos - i] = (wchar_t)48 + remainder;
 		number -= remainder;
 		number /= base;
 	}
-
-	// printf("OUT: %ls\n", buffer);
 
 	return buffer;
 }
@@ -64,9 +55,6 @@ wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned shor
 	wchar_t *cadd = alloc_str(1);
 	cadd[0] = add[wcslen(add) - 1];
 	pos = wcslen(dest) - 1 - pos;
-	// printf("\n\npos (sub): %lld", pos);
-	// printf("\ndest (sub): %ls", dest);
-	// printf("\nadd (sub): %ls", add);
 	while (dest[pos] != 48 && *cadd > 48)
 	{
 		dest[pos]--;
@@ -132,10 +120,20 @@ bool symbolic_greater(wchar_t *a, wchar_t *b)
 	return result;
 }
 
-// TODO: fix this to allow multiple '-' (and resolving them...);
 wchar_t *negate(wchar_t *a)
 {
-	return str_prepend(a, 1, (wchar_t)'-');
+	if (a[0] != '-')
+		return str_prepend(a, 1, (wchar_t)'-');
+	wchar_t *npointer = a;
+	size_t x = 0;
+	while (*npointer == '-')
+	{
+		++npointer;
+		++x;
+	}
+	wchar_t *negated = alloc_str(wcslen(npointer - ((x + 1) % 2)));
+	wcsncpy(negated, npointer, wcslen(npointer));
+	return negated;
 }
 
 wchar_t *symbolic_subtraction(wchar_t *total, wchar_t *sub, unsigned short base)
@@ -176,9 +174,6 @@ wchar_t *symbolic_left_shift(wchar_t *dest)
 // ! generally - walk through the code, fix silliness... (too consumed by fixing allocation and null-terminated strings errors currently...);
 wchar_t *symbolic_bit_add(wchar_t *dest, wchar_t *add, long long pos, unsigned short base)
 {
-	// printf("\n\npos (add): %lld", pos);
-	// printf("\ndest (add): %ls", dest);
-	// printf("\nadd (add): %ls", add);
 	wchar_t *cadd = alloc_str(1);
 	cadd[0] = add[wcslen(add) - 1];
 	pos = wcslen(dest) - 1 - pos;
@@ -219,11 +214,20 @@ wchar_t *symbolic_addition(wchar_t *a, wchar_t *b, unsigned short base)
 		return subtracted;
 	}
 
+	if (aneg)
+	{
+		wchar_t *negb = negate(b);
+		wchar_t *summedneg = symbolic_addition(negate(a), negb, base);
+		free(negb);
+		free(a);
+		return negate(summedneg);
+	}
+
 	const size_t length = min(wcslen(b), wcslen(a));
 	wchar_t *curr = length == wcslen(a) ? a : b;
 	wchar_t *dest = curr == a ? b : a;
 	wchar_t *isolated = alloc_str(1);
-	for (size_t i = 0; i < length - aneg; ++i)
+	for (size_t i = 0; i < length; ++i)
 	{
 		isolated[0] = curr[length - 1 - i];
 		dest = symbolic_bit_add(dest, isolated, i, base);
@@ -254,15 +258,14 @@ wchar_t *recursive_int_print(recursive_int *ri, unsigned short base)
 		ri = ri->ri;
 		next = base_representation(ri->value, base);
 		final = symbolic_addition(final, next, base);
-		printf("\nCURRSUM: %ls", final);
 	}
-	printf("\nCURRSUM: %ls\n", final);
 
 	return final;
 }
 wchar_t *recursive_int_print_sum(recursive_int *ri, unsigned short base)
 {
 	wchar_t *final = base_representation(ri->value, base);
+
 	while (ri->ri)
 	{
 		ri = ri->ri;

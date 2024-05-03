@@ -1,6 +1,7 @@
 #ifndef RECURSIVE_INT_BASE
 #define RECURSIVE_INT_BASE
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <stdbool.h>

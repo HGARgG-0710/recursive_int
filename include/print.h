@@ -1,7 +1,6 @@
 #ifndef RECURSIVE_INT_PRINT
 #define RECURSIVE_INT_PRINT
 
-#include <stdio.h>
 #include <locale.h>
 #include <string.h>
 #include <math.h>

@@ -1,6 +1,4 @@
-<!-- TODO: be more specific - what are the return values AND whether they are optimized or not. -->
-<!-- TODO: VITAL - write that the library (in general) assumes that the dynamic allocation is used; -->
-<!-- ! Fix that - make sure that static allocation + pointers equally viable; -->
+<!-- TODO: note that 'long long' EXCLUDES the LLONG_MIN (LLONG_MIN - 1 is safe as a min value for the ints' type).-->
 
 # recursive_int
 
@@ -12,6 +10,26 @@ NOTE: in the future, the library's orientation may change drastically (as a resu
 
 temp note: library's still not recommended for use, as there is presently a great space for optimization.
 Also - some of the methods could use a bit of re-doing (particularly true of the `print` module).
+
+## Usage 
+
+Run: 
+
+	make [target] NAME=[name]
+
+When in the project directory. 
+This will create the `build` directory at the project's root containing the object files, 
+as well as the archive with the chosen name `[name].a`. 
+
+The target to be chosen depends on the compiler and system. 
+
+Currently available targets (compilers/systems): 
+
+1. `gccwin32` (default) - GCC for Windows
+
+<!-- TODO: add support for more compilers, not just the GCC... -->
+
+Then, just use the archive, as you would any other archive-distributed library.
 
 ## Documentation
 
@@ -34,9 +52,9 @@ on integers.
 ##### Definitions
 
 ```c
-typedef struct
+typedef struct _rint
 {
-	recursive_int *ri;
+	struct _rint *ri;
 	long long value;
 } recursive_int;
 ```

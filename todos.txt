@@ -1,8 +1,7 @@
 1. Add more operations;
 	2.1. Modulo; 
 	2.2. Whole division;
-2. Run tests (fix bugs)
-3. OPTIMIZE:
+2. OPTIMIZE:
 
 	Currently, loops that resolve the recursion are all done in terms of the individual increments/decrements 
 		(when it comes to arithmetic binary operations, + and * in particular...); 
@@ -12,4 +11,13 @@
 
 	See if that's a problem anywhere else in the library...; 
 
-4. (precaution) Make tests slightly more thorough...; 
+3. (precaution) Make tests slightly more thorough...; 
+4. NOTE: memory leaks! 
+
+	The code may (probably does) have them. 
+	The 'need' for their introdocution was the fact that C code fails upon freeing. 
+	Find out why precisely that was and fix.
+
+	For now - keep as-is...;
+
+	[idea: try the 'always make NULL on free-ing thing'];

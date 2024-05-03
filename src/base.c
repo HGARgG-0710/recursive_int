@@ -1,23 +1,33 @@
 #include "../include/base.h"
 
+#define interloop(CHECK_OPERATOR)           \
+	while (interri->value CHECK_OPERATOR 0) \
+	{                                       \
+		if (!interri->ri)                   \
+			goto out;                       \
+		interri = interri->ri;              \
+	}
+
 #define get_signed(NAME, CHECK_OPERATOR)                   \
-	recursive_int *get_##NAME(recursive_int * ri)        \
+	recursive_int *get_##NAME(recursive_int *ri)           \
 	{                                                      \
 		recursive_int *interri = ri;                       \
 		recursive_int *sought = alloc_recursive_int(0, 0); \
 		recursive_int *temppos = sought;                   \
+		if (interri->ri)                                   \
+		{                                                  \
+			interloop(CHECK_OPERATOR);                     \
+			temppos->value = interri->value;               \
+		}                                                  \
 		while (interri->ri)                                \
 		{                                                  \
-			while (interri->value CHECK_OPERATOR 0)        \
-				interri = interri->ri;                     \
+			interri = interri->ri;                         \
+			interloop(CHECK_OPERATOR);                     \
+			temppos->ri = recursive_int_from_ll(0);        \
+			temppos = temppos->ri;                         \
 			temppos->value = interri->value;               \
-			if (interri->ri)                               \
-			{                                              \
-				temppos->ri = recursive_int_from_ll(0);    \
-				temppos = temppos->ri;                     \
-				interri = interri->ri;                     \
-			}                                              \
 		}                                                  \
+	out:                                                   \
 		return sought;                                     \
 	}
 
@@ -70,7 +80,7 @@ recursive_int *recursive_int_inc(recursive_int *ri)
 }
 recursive_int *recursive_int_dec(recursive_int *ri)
 {
-	if (LLONG_MIN == ri->value)
+	if (LLONG_MIN + 1 >= ri->value)
 		return alloc_recursive_int(-1, ri);
 	--ri->value;
 	return ri;
@@ -110,22 +120,22 @@ recursive_int *recursive_zero()
 
 recursive_int *first_not_full(recursive_int *ri)
 {
-	while ((ri->value == LLONG_MAX || ri->value == LLONG_MIN) && ri->ri)
+	while ((ri->value == LLONG_MAX || ri->value <= LLONG_MIN + 1) && ri->ri)
 		ri = ri->ri;
-	if (ri->value == LLONG_MAX || ri->value == LLONG_MIN)
+	if (ri->value == LLONG_MAX || ri->value <= LLONG_MIN + 1)
 		return false;
 	return ri;
 }
 
 recursive_int *last_not_full(recursive_int *ri)
 {
-	while ((ri->value == LLONG_MAX || ri->value == LLONG_MIN) && ri->ri)
+	while ((ri->value == LLONG_MAX || ri->value <= LLONG_MIN + 1) && ri->ri)
 		ri = ri->ri;
 	recursive_int *ri_p = ri;
 	while (ri_p->ri)
 	{
 		ri_p = ri_p->ri;
-		if (ri_p->value != LLONG_MAX && ri_p->value != LLONG_MIN)
+		if (ri_p->value != LLONG_MAX && ri_p->value > LLONG_MIN + 1)
 			ri = ri_p;
 	}
 	return ri;
@@ -163,15 +173,15 @@ recursive_int *recursive_int_revert(recursive_int *ri)
 {
 	recursive_int *copy = recursive_int_copy(ri);
 	recursive_int *last = recursive_int_last(copy);
+
 	recursive_int *curr = copy;
 	recursive_int *currlast = false;
 	recursive_int *next;
-
 	recursive_int *r = ri;
 
 	while (r->ri && curr != last)
 	{
-		next = copy->ri;
+		next = curr->ri;
 		last->ri = curr;
 		curr->ri = currlast;
 		currlast = curr;
@@ -181,7 +191,7 @@ recursive_int *recursive_int_revert(recursive_int *ri)
 		r = _r;
 	}
 
-	*ri = *copy;
+	*ri = *last;
 
 	return ri;
 }
