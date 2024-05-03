@@ -79,10 +79,10 @@ int main()
 			*f1 = recursive_int_print(r8, 10),
 			*f2 = recursive_int_print(r10, 10);
 
-	r7 = recursive_int_inc(r7);
-	r9 = recursive_int_inc(r9);
-	r8 = recursive_int_dec(r8);
-	r10 = recursive_int_dec(r10);
+	r7 = recursive_int_inc(r7, 1);
+	r9 = recursive_int_inc(r9, 1);
+	r8 = recursive_int_dec(r8, 1);
+	r10 = recursive_int_dec(r10, 1);
 
 	wchar_t *o1e1 = recursive_int_print(r7, 10),
 			*o1e2 = recursive_int_print(r9, 10),

@@ -1,3 +1,6 @@
+// ^ IDEA: create a typedef 'typedef long long symmetric_long;', then write a function for it - it'd cut the 'LLONG_MIN' from typical 'long long' by means of subtracting one (effectively: (x) => x - (x == LLONG_MIN))
+// * only question is - where to store the type...;
+
 #include "../include/base.h"
 
 #define interloop(CHECK_OPERATOR)           \
@@ -30,6 +33,28 @@
 	out:                                                   \
 		return sought;                                     \
 	}
+
+#define get_increment(NAME, CHECK_OPERATOR, SIGN, LIMIT)                \
+	recursive_int *recursive_int_##NAME(recursive_int *ri, long long v) \
+	{                                                                   \
+		v = SIGN llabs(v);                                              \
+		const bool insidebounds = ri->value CHECK_OPERATOR(LIMIT - v);  \
+		ri->value = insidebounds ? ri->value + v : LIMIT;               \
+		v = insidebounds ? 0 : -((LIMIT - v) - ri->value);              \
+		if (v)                                                          \
+			return alloc_recursive_int(v, ri);                          \
+		return ri;                                                      \
+	}
+
+long long inc(long long v, long long a)
+{
+	return v + a;
+}
+
+long long dec(long long v, long long a)
+{
+	return v - a;
+}
 
 recursive_int *alloc_recursive_int(long long value, recursive_int *subri)
 {
@@ -71,20 +96,8 @@ recursive_int *recursive_int_from_ll(long long value)
 	return alloc_recursive_int(value, false);
 }
 
-recursive_int *recursive_int_inc(recursive_int *ri)
-{
-	if (LLONG_MAX == ri->value)
-		return alloc_recursive_int(1, ri);
-	++ri->value;
-	return ri;
-}
-recursive_int *recursive_int_dec(recursive_int *ri)
-{
-	if (LLONG_MIN + 1 >= ri->value)
-		return alloc_recursive_int(-1, ri);
-	--ri->value;
-	return ri;
-}
+get_increment(inc, <=, , LLONG_MAX);
+get_increment(dec, >=, -, LLONG_MIN + 1);
 
 recursive_int *recursive_int_abs(recursive_int *ri)
 {
@@ -158,12 +171,13 @@ recursive_int *recursive_int_set_last(recursive_int *ri, recursive_int *newlast)
 	return discarded;
 }
 
+// TODO: optimize... [use a single 'long long' instead of this '1'];
 recursive_int *recursive_int_depth(recursive_int *ri)
 {
 	recursive_int *depth = recursive_int_from_ll(1);
 	while (ri->ri)
 	{
-		recursive_int_inc(depth);
+		recursive_int_inc(depth, 1);
 		ri = ri->ri;
 	}
 	return depth;

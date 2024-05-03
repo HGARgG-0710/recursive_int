@@ -49,7 +49,6 @@ wchar_t *base_representation(long long number, unsigned short base)
 	return buffer;
 }
 
-// TODO: does not work for cases when '|sub| > |total|' - doesn't change signs, just stops. Flaw of 'sub'.
 wchar_t *symbolic_bit_sub(wchar_t *dest, wchar_t *add, size_t pos, unsigned short base)
 {
 	wchar_t *cadd = alloc_str(1);

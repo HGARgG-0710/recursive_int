@@ -8,10 +8,6 @@
 #include "base.h"
 #include "string.h"
 
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-
-
 wchar_t *negate(wchar_t *a);
 bool symbolic_greater(wchar_t * a, wchar_t * b);
 

@@ -8,24 +8,23 @@ only limitations are due to the user's RAM.
 
 NOTE: in the future, the library's orientation may change drastically (as a result of expansion).
 
-temp note: library's still not recommended for use, as there is presently a great space for optimization.
-Also - some of the methods could use a bit of re-doing (particularly true of the `print` module).
+temp note: library's currently in development process, and so caution is advised when putting to use.
 
-## Usage 
+## Usage
 
-Run: 
+Run:
 
-	make [target] NAME=[name]
+    make [target] NAME=[name]
 
-When in the project directory. 
-This will create the `build` directory at the project's root containing the object files, 
-as well as the archive with the chosen name `[name].a`. 
+When in the project directory.
+This will create the `build` directory at the project's root containing the object files,
+as well as the archive with the chosen name `[name].a`.
 
-The target to be chosen depends on the compiler and system. 
+The target to be chosen depends on the compiler and system.
 
-Currently available targets (compilers/systems): 
+Currently available targets (compilers/systems):
 
-1. `gccwin32` (default) - GCC for Windows
+1. `gccwin32` (default) - GCC and Windows
 
 <!-- TODO: add support for more compilers, not just the GCC... -->
 
@@ -48,6 +47,13 @@ on integers.
 4. `print.h` - methods for printing the recursive integers, either as a sum or as a precise value in a given base;
 
 #### `base.h`
+
+##### Macros
+
+```c
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+```
 
 ##### Definitions
 
@@ -232,7 +238,7 @@ On the other hand, the unoptimized operations are simpler to implement, but are 
 recursive_int *recursive_int_diff(recursive_int *, recursive_int *)
 ```
 
-Difference between two `recursive_int`s without sign alteration (preserves optimized-ness).
+Difference between two `recursive_int`s without sign alteration (preserves not the optimized-ness, but only the lack of sign-alteration).
 
 &nbsp;
 
@@ -240,7 +246,7 @@ Difference between two `recursive_int`s without sign alteration (preserves optim
 recursive_int *recursive_int_sum(recursive_int *, recursive_int *)
 ```
 
-Sum between two `recursive_int`s without sign alteration (preserves optimized-ness).
+Sum between two `recursive_int`s without sign alteration (preserves not the optimized-ness, but only the lack of sign-alteration).
 
 &nbsp;
 
@@ -372,13 +378,6 @@ Returns the boolean indicating whether the given `recursive_int` fits into a sin
 #### `print.h`
 
 Methods related to printing of the values of `recursive_int` (mainly for debug purposes).
-
-##### Macros
-
-```c
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-```
 
 ##### Methods
 

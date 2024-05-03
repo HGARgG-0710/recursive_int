@@ -8,15 +8,13 @@ int main()
 	// ^ test of: de_zero;
 
 	recursive_int *r1 = alloc_recursive_int(0, alloc_recursive_int(0, alloc_recursive_int(45999354, alloc_recursive_int(-7732, alloc_recursive_int(0, alloc_recursive_int(5151546, alloc_recursive_int(0, alloc_recursive_int(661464, false))))))));
-	recursive_int *dez = de_zero(r1);
-
 	wchar_t *dezin = recursive_int_print_sum(r1, 10);
-	wchar_t *dezout = recursive_int_print_sum(dez, 10);
-
 	printf("Recursive int de-zero test 1 (in): %ls\n", dezin);
-	printf("Recursive int de-zero test 1 (out): %ls\n", dezout);
 
-	free_recursive_int(r1);
+	recursive_int *dez = de_zero(r1);
+	wchar_t *dezout = recursive_int_print_sum(dez, 10);
+	printf("Recursive int de-zero test 1 (out): %ls\n\n", dezout);
+
 	free_recursive_int(dez);
 
 	free(dezin);
@@ -25,21 +23,20 @@ int main()
 	// ^ test of: recursive_int_minimize;
 
 	recursive_int *r2 = alloc_recursive_int(-7709997779999999999, alloc_recursive_int(-7897854016086543794, alloc_recursive_int(LLONG_MIN + 4, alloc_recursive_int(LLONG_MIN + 1000, false))));
-	recursive_int *r3 = alloc_recursive_int(2342241343532367543, alloc_recursive_int(7764556617070970965, alloc_recursive_int(LLONG_MAX - 32, alloc_recursive_int(LLONG_MAX - 535343, false))));
-
-	recursive_int *minimized1 = recursive_int_minimize(r1);
-	recursive_int *minimized2 = recursive_int_minimize(r2);
-
 	wchar_t *a1 = recursive_int_print_sum(r2, 10);
-	wchar_t *a2 = recursive_int_print_sum(r3, 10);
-
-	wchar_t *o1a1 = recursive_int_print_sum(minimized1, 10);
-	wchar_t *o1a2 = recursive_int_print_sum(minimized2, 10);
-
 	printf("Recursive int minimization test 1 (in): %ls\n", a1);
+
+	recursive_int *minimized1 = recursive_int_minimize(r2);
+	wchar_t *o1a1 = recursive_int_print_sum(minimized1, 10);
 	printf("Recursive int minimization test 1 (out): %ls\n", o1a1);
+
+	recursive_int *r3 = alloc_recursive_int(2342241343532367543, alloc_recursive_int(7764556617070970965, alloc_recursive_int(LLONG_MAX - 32, alloc_recursive_int(LLONG_MAX - 535343, false))));
+	wchar_t *a2 = recursive_int_print_sum(r3, 10);
 	printf("Recursive int minimization test 2 (in): %ls\n", a2);
-	printf("Recursive int minimization test 2 (in): %ls\n", o1a2);
+
+	recursive_int *minimized2 = recursive_int_minimize(r3);
+	wchar_t *o1a2 = recursive_int_print_sum(minimized2, 10);
+	printf("Recursive int minimization test 2 (out): %ls\n\n", o1a2);
 
 	free_recursive_int(r2);
 	free_recursive_int(r3);
@@ -77,43 +74,31 @@ int main()
 
 	recursive_int *rsum1 = recursive_int_sum(r4, r5);
 
-	free_recursive_int(r4);
-	free_recursive_int(r5);
 	r4 = recursive_int_copy(r4_);
 	r5 = recursive_int_copy(r5_);
 
 	recursive_int *rsum2 = recursive_int_sum(r4, r6);
 
-	free_recursive_int(r4);
-	free_recursive_int(r6);
 	r4 = recursive_int_copy(r4_);
 	r6 = recursive_int_copy(r6_);
 
 	recursive_int *rsum3 = recursive_int_sum(r5, r7);
 
-	free_recursive_int(r5);
-	free_recursive_int(r7);
 	r5 = recursive_int_copy(r5_);
 	r7 = recursive_int_copy(r7_);
 
 	recursive_int *rdiff1 = recursive_int_diff(r4, r5);
 
-	free_recursive_int(r4);
-	free_recursive_int(r5);
 	r4 = recursive_int_copy(r4_);
 	r5 = recursive_int_copy(r5_);
 
 	recursive_int *rdiff2 = recursive_int_diff(r4, r6);
 
-	free_recursive_int(r4);
-	free_recursive_int(r6);
 	r4 = recursive_int_copy(r4_);
 	r6 = recursive_int_copy(r6_);
 
 	recursive_int *rdiff3 = recursive_int_diff(r5, r7);
 
-	free_recursive_int(r5);
-	free_recursive_int(r7);
 	r5 = recursive_int_copy(r5_);
 	r7 = recursive_int_copy(r7_);
 
@@ -231,10 +216,10 @@ int main()
 	const bool o1f1 = recursive_int_equal_optimized(opr11, opr12);
 	const bool o1f2 = recursive_int_equal_optimized(opr11, opr13);
 
-	printf("Recursive int equal test (in): %ls %ls", f1a, f1b);
-	printf("Recursive int equal test (out): %d", o1f1);
-	printf("Recursive int equal test (in): %ls %ls", f2a, f2b);
-	printf("Recursive int equal test (out): %d", o1f2);
+	printf("Recursive int equal test (in): %ls %ls\n", f1a, f1b);
+	printf("Recursive int equal test (out): %d\n", o1f1);
+	printf("Recursive int equal test (in): %ls %ls\n", f2a, f2b);
+	printf("Recursive int equal test (out): %d\n", o1f2);
 
 	free_recursive_int(r11);
 	free_recursive_int(r12);
