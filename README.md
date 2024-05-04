@@ -1,5 +1,3 @@
-<!-- TODO: note that 'long long' EXCLUDES the LLONG_MIN (LLONG_MIN - 1 is safe as a min value for the ints' type).-->
-
 # recursive_int
 
 This is a small C library that wholy implements Integers via recursion.
@@ -25,10 +23,14 @@ The target to be chosen depends on the compiler and system.
 Currently available targets (compilers/systems):
 
 1. `gccwin32` (default) - GCC and Windows
+2. `gcc` - GCC with Shell Script
 
 <!-- TODO: add support for more compilers, not just the GCC... -->
 
 Then, just use the archive, as you would any other archive-distributed library.
+
+NOTE: the `LLONG_MIN` from here on is actually `LLONG_MIN + 1`. Due to the implementation of `llabs`,
+the value of `LLONG_MIN` has no absolute value and is so excluded from the library's allowed number range.
 
 ## Documentation
 
@@ -45,6 +47,7 @@ on integers.
 2. `optimized.h` - most of operations in `base.h` are on "unoptimized" integers (those that can contain sign alterations and zeros); Contains operations related to optimizing them (saves memory, takes additional time to do, but make writing algorithms a lot easier).
 3. `recursive_int.h` - methods that depend upon `optimized.h`, but don't relate to optimization itself.
 4. `print.h` - methods for printing the recursive integers, either as a sum or as a precise value in a given base;
+5. `string.h` - methdos that mildly simplify dynamic allocation of `wchar_t *` arrays.
 
 #### `base.h`
 
@@ -499,3 +502,28 @@ wchar_t *recursive_int_print_sum(recursive_int *, unsigned short base);
 
 Allocates a new `wchar_t*`, containing the representation of the given `recursive_int` as a sum of
 `long long` values represented as `wchar_t*` in base `base`.
+
+#### `string.h`
+
+```c
+wchar_t * alloc_str(size_t elems)
+```
+
+Allocates and returns a pointer to a string with `elems` number of elements (`'\0'` is excluded).
+
+NOTE: the string is uninitialized.
+
+```c
+wchar_t * str_append(wchar_t * origin, long long newelems, wchar_t fill);
+```
+
+Allocates a new string of size `wcslen(origin) + newelems` and fills all of its new elements
+(those that go after `wcslen(origin)`) with `fill`. All the other ones are filled with values from `origin`.
+
+NOTE: this can be used to create strings with lesser number of characters as well. For that, `newelems` has to be `< 0`.
+
+```c
+wchar_t *str_prepend(wchar_t * origin, long long newelems, wchar_t fill);
+```
+
+Same as `str_append`, but adds `fill` first.

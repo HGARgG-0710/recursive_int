@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "../include/print.h"
 
 int main()
@@ -233,13 +234,13 @@ int main()
 	printf("Printing sum test 1 (out, 2):%ls \n", o2i1);
 	printf("Printing sum test 1 (out, 3):%ls \n\n", o3i1);
 
-	printf("Printing sum test 1 (out, 1):%ls \n", o1i2);
-	printf("Printing sum test 1 (out, 2):%ls \n", o2i2);
-	printf("Printing sum test 1 (out, 3):%ls \n\n", o3i2);
+	printf("Printing sum test 2 (out, 1):%ls \n", o1i2);
+	printf("Printing sum test 2 (out, 2):%ls \n", o2i2);
+	printf("Printing sum test 2 (out, 3):%ls \n\n", o3i2);
 
-	printf("Printing sum test 1 (out, 1):%ls \n", o1i3);
-	printf("Printing sum test 1 (out, 2):%ls \n", o2i3);
-	printf("Printing sum test 1 (out, 3):%ls \n\n", o3i3);
+	printf("Printing sum test 3 (out, 1):%ls \n", o1i3);
+	printf("Printing sum test 3 (out, 2):%ls \n", o2i3);
+	printf("Printing sum test 3 (out, 3):%ls \n\n", o3i3);
 
 	free(o1i1);
 	free(o2i1);

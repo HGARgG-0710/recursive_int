@@ -1,17 +1,14 @@
 1. Add more operations;
-	2.1. Modulo; 
-	2.2. Whole division;
-2. OPTIMIZE:
+	1.1. Modulo; 
+	1.2. Whole division;
+2. More symbolic operations:
 
-	Currently, loops that resolve the recursion are all done in terms of the individual increments/decrements 
-		(when it comes to arithmetic binary operations, + and * in particular...); 
-	This causes large enough arithmetic to grind to a halt. 
-	To fix, take out ('abs'-wise) THE SMALLEST IN 'ABS' OF THE TWO VALUES ON CURRENT LEVELS!
-		THEN, JUST GO FORWARD AS PREVIOUSLY!
+	They cause algorithms to become from O(n) to O(logn);
+	Causes a great speedup to rewrite any actual recursive_int operations in terms of symbolic operations; 
 
-	See if that's a problem anywhere else in the library...; 
+	Think about it (namely, the cost of convertion from one to another and back again...);
 
-3. (precaution) Make tests slightly more thorough...; 
+3. (just a precaution) For future, ake tests slightly more thorough...; 
 4. NOTE: memory leaks! 
 
 	The code may (probably does) have them. 
@@ -21,3 +18,8 @@
 	For now - keep as-is...;
 
 	[idea: try the 'always make NULL on free-ing thing'];
+
+	ALSO - the main issue is difficulty keeping track of values for pointers. 
+	To remedy, follow the principle of 'copy, not replace' - instead of replacing already existing values 
+		by means of freeing, then returning the new pointer value, just create a copy and free on the level higher. 
+	Cleaner for implementations (they no longer require for the given pointer to actually point to dynamically allocated memory).

@@ -1,8 +1,5 @@
 // ^ IDEA: create the general 'non-optimized' algorithms that would rely upon dynamic decision of 'directions' of change (note - the 'optimized' version still stays as it is faster (an O(1) operations turn into O(n)); the general one goes into either 'base' or 'recursive_int');
 
-#include <stdio.h>
-#include "../include/print.h"
-
 #include "../include/optimized.h"
 
 // ! leaks [think about what to do with them - perhaps, restructure the way that certain methods work? (to make freeing memory easier)];

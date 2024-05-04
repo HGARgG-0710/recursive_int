@@ -1,5 +1,6 @@
 // TODO: refactor the tests... (some of it can be generalized, at least...);
 
+#include <stdio.h>
 #include "../include/print.h"
 #include "../include/optimized.h"
 

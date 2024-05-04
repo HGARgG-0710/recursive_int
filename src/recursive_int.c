@@ -42,20 +42,23 @@ bool recursive_int_equal(recursive_int *a, recursive_int *b)
 	return equal;
 }
 
-// TODO: OPTIMIZE THOSE ALGORITHMS - the cost of a single loop iteration is too bloody high. INSTEAD, delete them - level-by-level, take down the lowest of the two. This will also eliminate the 'while' (partially);
+// ! critical note: while this 'works', it's horribly inefficient. Instead (after having finished the 'print' properly) - transform to a 'wchar_t *' via 'print', then do a 'symbolic multiplication' (implement Karatsuba's, or some other fast-multiplication algorithm);
+// ^ values around ~2*10^6 ALREADY cause the execution to take an inappropriately large amount of time...; Here, the speed is O(n^2), whereas the multiplication using symbols would reduce it to (at least) O(log(n)^2); 
+// ^ note: also - not requiring to constantly allocate-deallocate inside the function would make the code clearer (again, the issue with memory-safety: the 'copy, not replace' principle);
 // * The algorithms for addition and multiplication will ABSOLUTELY CHOKE on larger values...;
 recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 {
 	recursive_int *opdest = recursive_int_optimize(dest),
 				  *oporig = recursive_int_optimize(origin);
 
-	if (oporig->ri < 0)
+	if (oporig->value < 0)
 	{
 		opdest = recursive_int_addinv(opdest);
 		oporig = recursive_int_addinv(oporig);
 	}
 
-	recursive_int *destcopy = recursive_int_copy(opdest);
+	recursive_int *initcopy = recursive_int_copy(opdest);
+	recursive_int *destcopy;
 
 	--oporig->value;
 	if (!oporig->value)
@@ -70,10 +73,13 @@ recursive_int *recursive_int_mult(recursive_int *dest, recursive_int *origin)
 		--oporig->value;
 		while (!oporig->value && oporig->ri)
 			oporig = oporig->ri;
+		destcopy = recursive_int_copy(initcopy);
 		opdest = recursive_int_sum(opdest, destcopy);
+		free_recursive_int(destcopy);
 	}
 
-	free_recursive_int(destcopy);
+	free_recursive_int(initcopy);
+
 	return opdest;
 }
 
