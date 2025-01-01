@@ -1,6 +1,9 @@
+[v0.2]
+
 1. Add more operations;
 	1.1. Modulo; 
 	1.2. Whole division;
+
 2. More symbolic operations:
 
 	They cause algorithms to become from O(n) to O(logn);
@@ -8,18 +11,27 @@
 
 	Think about it (namely, the cost of convertion from one to another and back again...);
 
-3. (just a precaution) For future, ake tests slightly more thorough...; 
-4. NOTE: memory leaks! 
+3. (just a precaution) For future, make tests slightly more thorough...; 
+4. NOTE: flawed memory allocation model: 
 
-	The code may (probably does) have them. 
-	The 'need' for their introdocution was the fact that C code fails upon freeing. 
-	Find out why precisely that was and fix.
+	The functions for operating on 'recursive_int'-s free the memory THEY NEVER ALLOCATED, 
+		which is bad. 
+	Basically - instead of trying to modify existing memory/replace value for an existing pointer, one must [instead]
+		allocate new memory without any deallocations
 
-	For now - keep as-is...;
+5. Improve the design for 'recursive_int': 
+	1. must use [in combination with the linked list] the 'int32_t *' [reason - better cache locality]; 
+		Current code causes it to behave like a linked list. 
+		Problem is - due to the nature of the calculation, it brings no benefit. 
 
-	[idea: try the 'always make NULL on free-ing thing'];
+		Another problem is - what we're (actually) doing is: 
 
-	ALSO - the main issue is difficulty keeping track of values for pointers. 
-	To remedy, follow the principle of 'copy, not replace' - instead of replacing already existing values 
-		by means of freeing, then returning the new pointer value, just create a copy and free on the level higher. 
-	Cleaner for implementations (they no longer require for the given pointer to actually point to dynamically allocated memory).
+			1. keeping some 'N' of 'LLONG_MAX'/'LLONG_MIN', instead of just 2 values - [N, LLONG_MAX]; 
+				which, here, is N * LLONG_MAX; 
+			
+	2. SOLUTION: make it a polynomial-like implementation for keeping numbers in a LLONG_MAX base: 
+
+		# stored as a 'int32_t *', that points to ANOTHER structure like the current one [possibly NULL]
+		[a0, a1, ...] == a0 + LLONG_MAX * a1 + LLONG_MAX ^ 2 * a2 + ...
+
+		2.1. Need to set the library's "limiting" size of "int32_t *", after which it'll be "enough"
